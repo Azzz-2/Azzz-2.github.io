@@ -356,6 +356,30 @@ button {
     var(--panel);
 }
 
+.video-gallery {
+  display: grid;
+  gap: clamp(32px, 5vw, 72px);
+}
+
+.video-piece {
+  min-width: 0;
+}
+
+.video-piece-head {
+  display: flex;
+  justify-content: space-between;
+  gap: 20px;
+  margin-bottom: 12px;
+  color: var(--muted);
+  font-family: "Bebas Neue", sans-serif;
+  font-size: 12px;
+  letter-spacing: 0.2em;
+}
+
+.video-piece-head span:first-child {
+  color: var(--ink);
+}
+
 .video-wrap {
   position: relative;
   overflow: hidden;

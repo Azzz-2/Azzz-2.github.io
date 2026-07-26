@@ -101,21 +101,52 @@
           <span>03</span>
           <span>SHOWREEL / 作品影像</span>
         </div>
-        <div class="video-wrap reveal">
-          <video
-            id="portfolio-video"
-            controls
-            playsinline
-            preload="metadata"
-            poster="./public/media/stage-blue.jpg"
-          >
-            <source src="./public/media/showreel.mp4" type="video/mp4" />
-            你的浏览器暂不支持视频播放。
-          </video>
-          <button class="video-play" type="button" aria-label="播放作品影像">
-            <span>PLAY</span>
-          </button>
-          <div class="video-corner" aria-hidden="true">LIGHTING / LIVE</div>
+        <div class="video-gallery">
+          <article class="video-piece reveal">
+            <div class="video-piece-head">
+              <span>01 / SHOWREEL</span>
+              <span>LIGHTING DESIGN</span>
+            </div>
+            <div class="video-wrap">
+              <video
+                id="portfolio-video"
+                controls
+                playsinline
+                preload="metadata"
+                poster="./public/media/stage-blue.jpg"
+              >
+                <source src="./public/media/showreel.mp4" type="video/mp4" />
+                你的浏览器暂不支持视频播放。
+              </video>
+              <button class="video-play" type="button" aria-label="播放作品影像一">
+                <span>PLAY</span>
+              </button>
+              <div class="video-corner" aria-hidden="true">LIGHTING / LIVE 01</div>
+            </div>
+          </article>
+
+          <article class="video-piece reveal">
+            <div class="video-piece-head">
+              <span>02 / LIVE PERFORMANCE</span>
+              <span>FULL SET</span>
+            </div>
+            <div class="video-wrap">
+              <video
+                id="portfolio-video-02"
+                controls
+                playsinline
+                preload="metadata"
+                poster="./public/media/stage-orange.jpg"
+              >
+                <source src="./public/media/live-performance.mp4" type="video/mp4" />
+                你的浏览器暂不支持视频播放。
+              </video>
+              <button class="video-play" type="button" aria-label="播放作品影像二">
+                <span>PLAY</span>
+              </button>
+              <div class="video-corner" aria-hidden="true">LIGHTING / LIVE 02</div>
+            </div>
+          </article>
         </div>
         <div class="video-notes">
           <span>灯束结构</span>

@@ -18,10 +18,16 @@ if ("IntersectionObserver" in window) {
   revealItems.forEach((item) => item.classList.add("is-visible"));
 }
 
-const video = document.querySelector("#portfolio-video");
-const playButton = document.querySelector(".video-play");
+const videos = document.querySelectorAll(".video-wrap video");
 
-if (video && playButton) {
+document.querySelectorAll(".video-wrap").forEach((videoWrap) => {
+  const video = videoWrap.querySelector("video");
+  const playButton = videoWrap.querySelector(".video-play");
+
+  if (!video || !playButton) {
+    return;
+  }
+
   const syncPlayButton = () => {
     playButton.classList.toggle("is-hidden", !video.paused);
   };
@@ -34,7 +40,14 @@ if (video && playButton) {
     }
   });
 
-  video.addEventListener("play", syncPlayButton);
+  video.addEventListener("play", () => {
+    videos.forEach((otherVideo) => {
+      if (otherVideo !== video) {
+        otherVideo.pause();
+      }
+    });
+    syncPlayButton();
+  });
   video.addEventListener("pause", syncPlayButton);
   video.addEventListener("ended", syncPlayButton);
-}
+});
