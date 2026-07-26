@@ -316,7 +316,7 @@ button {
 
 .profile-facts {
   display: grid;
-  grid-template-columns: repeat(3, 1fr);
+  grid-template-columns: repeat(2, 1fr);
   border-top: 1px solid var(--line);
 }
 
@@ -348,6 +348,65 @@ button {
   font-size: 10px;
   letter-spacing: 0.12em;
   line-height: 1.6;
+}
+
+.experience {
+  background:
+    linear-gradient(115deg, rgba(240, 68, 47, 0.08), transparent 42%),
+    var(--bg);
+}
+
+.experience-list {
+  margin: 0;
+  padding: 0;
+  border-top: 1px solid var(--line);
+  list-style: none;
+}
+
+.experience-item {
+  display: grid;
+  min-height: 132px;
+  grid-template-columns: 72px minmax(110px, 0.55fr) minmax(220px, 1.45fr) auto;
+  gap: clamp(20px, 4vw, 70px);
+  align-items: center;
+  border-bottom: 1px solid var(--line);
+  transition:
+    background 180ms ease,
+    padding 180ms ease;
+}
+
+.experience-item:hover {
+  padding-right: 18px;
+  padding-left: 18px;
+  background: rgba(244, 240, 233, 0.035);
+}
+
+.experience-index,
+.experience-tag {
+  color: var(--muted);
+  font-family: "Bebas Neue", sans-serif;
+  font-size: 12px;
+  letter-spacing: 0.2em;
+}
+
+.experience-index {
+  color: var(--red);
+}
+
+.experience-city {
+  font-size: 14px;
+  letter-spacing: 0.18em;
+}
+
+.experience-club {
+  font-family: "Bebas Neue", sans-serif;
+  font-size: clamp(38px, 5vw, 78px);
+  font-weight: 400;
+  letter-spacing: 0.02em;
+}
+
+.experience-tag {
+  text-align: right;
 }
 
 .showreel {
@@ -775,6 +834,37 @@ footer a {
     max-width: 145px;
     padding-bottom: 10px;
     text-align: right;
+  }
+
+  .experience-item {
+    min-height: 0;
+    grid-template-columns: 42px 1fr;
+    gap: 8px 16px;
+    padding: 22px 0;
+  }
+
+  .experience-item:hover {
+    padding: 22px 0;
+  }
+
+  .experience-index {
+    grid-row: 1 / 4;
+    align-self: start;
+    padding-top: 5px;
+  }
+
+  .experience-city,
+  .experience-club,
+  .experience-tag {
+    grid-column: 2;
+  }
+
+  .experience-club {
+    font-size: clamp(38px, 13vw, 58px);
+  }
+
+  .experience-tag {
+    text-align: left;
   }
 
   .video-wrap::before,
