@@ -561,6 +561,33 @@ button {
   margin: 0 auto;
 }
 
+.works-photo-grid {
+  display: grid;
+  grid-template-columns: repeat(2, minmax(0, 1fr));
+  gap: clamp(14px, 2vw, 28px);
+  margin-top: clamp(40px, 6vw, 88px);
+}
+
+.works-photo {
+  overflow: hidden;
+  border: 1px solid rgba(244, 240, 233, 0.2);
+  background: #000;
+}
+
+.works-photo:first-child {
+  grid-column: 1 / -1;
+}
+
+.works-photo img {
+  width: 100%;
+  height: auto;
+  transition: transform 700ms cubic-bezier(0.2, 0.7, 0.2, 1);
+}
+
+.works-photo:hover img {
+  transform: scale(1.018);
+}
+
 .work-image {
   position: relative;
   overflow: hidden;
@@ -762,6 +789,14 @@ footer a {
 
   .works-grid {
     grid-template-columns: 1fr;
+  }
+
+  .works-photo-grid {
+    grid-template-columns: 1fr;
+  }
+
+  .works-photo:first-child {
+    grid-column: auto;
   }
 
   .work-card-blue {
