@@ -574,10 +574,6 @@ button {
   background: #000;
 }
 
-.works-photo:first-child {
-  grid-column: 1 / -1;
-}
-
 .works-photo img {
   width: 100%;
   height: auto;
@@ -789,14 +785,6 @@ footer a {
 
   .works-grid {
     grid-template-columns: 1fr;
-  }
-
-  .works-photo-grid {
-    grid-template-columns: 1fr;
-  }
-
-  .works-photo:first-child {
-    grid-column: auto;
   }
 
   .work-card-blue {
