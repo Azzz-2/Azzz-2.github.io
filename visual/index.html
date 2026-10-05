@@ -82,7 +82,7 @@ body.ready[data-view="home"] .home { opacity: 1; transition: opacity 1.2s var(--
 .hint i { position: relative; width: 16px; height: 16px; border: 1px solid var(--dim); border-radius: 50%; }
 .hint i::after { content: ""; position: absolute; left: 6px; top: 6px; width: 2px; height: 2px; border-radius: 50%; background: var(--mid); }
 
-/* ------------------------------------------------------------------ 入口：贴在彗星头上（桌面） */
+/* ------------------------------------------------------------------ 入口：贴在彗星头上 */
 .entries { position: fixed; inset: 0; z-index: 6; pointer-events: none; opacity: 0; transition: opacity .4s var(--ease); }
 body.ready[data-view="home"] .entries { opacity: 1; transition: opacity 1.2s var(--ease) .9s; }
 body:not([data-view="home"]) .entries { visibility: hidden; transition: opacity .4s var(--ease), visibility 0s .4s; }
@@ -101,6 +101,8 @@ body:not([data-view="home"]) .entries { visibility: hidden; transition: opacity 
 .entry.on .sub, .entry:focus-visible .sub { opacity: .9; }
 .entry.behind { opacity: .58; }
 .entry:focus-visible { outline: none; }
+.entry:focus-visible .dot { outline: 2px solid var(--warm); outline-offset: 2px; }
+.entry:active .dot { box-shadow: inset 0 0 0 2px var(--warm); }
 
 /* ------------------------------------------------------------------ 四页 */
 .panel { position: fixed; inset: 0; z-index: 5; pointer-events: none; opacity: 0; visibility: hidden; transition: opacity .35s var(--ease), visibility 0s linear .35s; }
@@ -180,15 +182,17 @@ body.in-section .secnav { opacity: 1; visibility: visible; transition: opacity .
 .toast.is-on { opacity: 1; transform: translate(-50%, 0); }
 
 /* ------------------------------------------------------------------ 竖屏（手机） */
-html.portrait .who { bottom: calc(118px + var(--safe-b)); }
+html.portrait .who { bottom: calc(32px + var(--safe-b)); }
 html.portrait .who h1 { font-size: 54px; }
 html.portrait .who p { margin-top: 18px; }
 html.portrait .hint { display: none; }
-html.portrait .entries { inset: auto var(--pad) calc(26px + var(--safe-b)); display: grid; grid-template-columns: repeat(5, 1fr); gap: 4px; }
-html.portrait .entry { position: relative; width: auto; height: 62px; transform: none !important; display: flex; align-items: center; justify-content: center; border-top: 1px solid var(--line); opacity: 1; }
-html.portrait .entry .dot, html.portrait .entry .sub { display: none; }
-html.portrait .entry .l { position: static; transform: none; flex-direction: column; align-items: center; gap: 6px; }
-html.portrait .entry b { font-size: 15px; letter-spacing: .16em; margin-right: -.16em; }
+html.portrait .entry { left: -32px; top: -32px; width: 64px; height: 64px; opacity: 1; touch-action: manipulation; }
+html.portrait .entry .dot { left: 0; top: 0; width: 64px; height: 64px; }
+html.portrait .entry .sub, html.portrait .entry em { display: none; }
+html.portrait .entry .l { top: 32px; }
+html.portrait .entry.right .l { left: 64px; }
+html.portrait .entry.left .l { right: 64px; }
+html.portrait .entry b { font-size: 15px; letter-spacing: .16em; color: var(--ink); }
 html.portrait .film-info { flex-direction: column; align-items: flex-start; gap: 22px; }
 html.portrait .works-side { width: auto; }
 html.portrait .clist { width: auto; }
@@ -198,9 +202,10 @@ html.portrait .line { white-space: normal; text-align: center; }
 
 /* ------------------------------------------------------------------ 没有 WebGL2：静态人像 + 文字版 */
 body.no-gl .entries { inset: auto var(--pad) auto auto; top: 50%; transform: translateY(-50%); display: flex; flex-direction: column; gap: 6px; opacity: 1; }
-body.no-gl .entry { position: relative; width: auto; height: 48px; transform: none !important; }
+body.no-gl .entry { position: relative; left: auto; top: auto; width: auto; height: 48px; transform: none !important; }
 body.no-gl .entry .dot { display: none; }
 body.no-gl .entry .l { position: static; transform: none; }
+body.no-gl .entry:focus-visible { outline: 2px solid var(--warm); outline-offset: 4px; }
 body.no-gl .panel { background: rgba(5, 5, 5, .86); }
 body.no-gl .fb-big { display: block; position: absolute; left: 50%; top: 30%; transform: translate(-50%, -50%); font-size: min(22vw, 30vh); font-weight: 900; line-height: 1; color: var(--ink); }
 body.no-gl.plain-video .wall-video { opacity: 1; }
@@ -1509,7 +1514,8 @@ void main() {
         const s = Math.min(W * 1.28, H * 0.64);
         const cx = W * 0.05, cy = -H / 2 + 64 + 0.3478 * s;
         L.portrait = { cx, cy, S: s };
-        L.orbit = { cx: cx - 0.02 * s, cy: cy + 0.2 * s, a: W * 0.46, b: 0.1 * s, depth: 0.3 * s, rot: -10 * DEG };
+        // 竖向轨道让五个入口分散在人像周围，光球和触摸区使用同一投影。
+        L.orbit = { cx: cx - 0.02 * s, cy: cy + 0.2 * s, a: W * 0.32, b: Math.min(H * 0.25, s * 0.4), depth: 0.12 * s, rot: -10 * DEG };
       }
       return L;
     },
@@ -1730,8 +1736,8 @@ void main() {
     bind() {
       window.addEventListener('resize', () => this.onResize());
       window.addEventListener('pointermove', (e) => this.onMove(e), { passive: true });
-      window.addEventListener('pointerdown', (e) => { if (e.pointerType === 'touch') { this.touching = true; this.lastImp = null; this.onMove(e); } }, { passive: true });
-      const up = (e) => { if (e.pointerType === 'touch') { this.touching = false; this.ptr[2] = 0; this.lastImp = null; } };
+      window.addEventListener('pointerdown', (e) => { if (e.pointerType === 'touch') { this.touching = true; this.orbV = 0; this.lastImp = null; this.onMove(e); } }, { passive: true });
+      const up = (e) => { if (e.pointerType === 'touch') { this.touching = false; this.ptr[2] = 0; this.lastImp = null; this.hover = -1; this.entries.forEach((x) => x.el.classList.remove('on')); } };
       window.addEventListener('pointerup', up, { passive: true });
       window.addEventListener('pointercancel', up, { passive: true });
       document.documentElement.addEventListener('pointerleave', () => { this.ptr[2] = 0; this.lastImp = null; this.cam.ty = 0; this.cam.tp = 0; });
@@ -1835,7 +1841,7 @@ void main() {
       let focus, dur, delay, turb;
       if (prev === 'home') {
         const e = this.entries.find((x) => x.id === view);
-        focus = e && e.p && this.land ? [e.p[0], e.p[1]] : [0, L.H / 2]; dur = 2.1; delay = 0.42; turb = 130;
+        focus = e && e.p ? [e.p[0], e.p[1]] : [0, L.H / 2]; dur = 2.1; delay = 0.42; turb = 130;
       } else if (view === 'home') { focus = [L.portrait.cx, L.portrait.cy]; dur = 2.3; delay = 0.5; turb = 110; }
       else { focus = from || [0, L.H / 2]; dur = 1.8; delay = 0.38; turb = 120; }
       if (REDUCE) { dur = 0.7; delay = 0; turb = 0; }
@@ -1964,7 +1970,7 @@ void main() {
 
     // 轨道上的点是否在人像背后被挡住
     hidden(x, y, z) {
-      if (z >= 0 || this.view !== 'home') return false;
+      if (!this.land || z >= 0 || this.view !== 'home') return false;
       const P = this.L.portrait;
       return S.alphaAt(this.data, (x - P.cx) / P.S + S.U0, (y - P.cy) / P.S + S.V0) > 0.35;
     },
@@ -1974,10 +1980,11 @@ void main() {
       this.entries.forEach((e) => {
         const t = e.t0 + this.orbT, p = XZ.Orbit.point(geo, t), s = this.project(p);
         e.p = p;
-        if (!this.land) return;
+        const labelWidth = e.w;
+        const gap = this.land ? 30 : 36;
         let right = p[0] >= geo.cx;
-        if (right && s[0] + 30 + e.w > this.W - 12) right = false;
-        else if (!right && s[0] - 30 - e.w < 12) right = true;
+        if (right && s[0] + gap + labelWidth > this.W - 12) right = false;
+        else if (!right && s[0] - gap - labelWidth < 12) right = true;
         if (e.right !== right) { e.right = right; e.el.classList.toggle('right', right); e.el.classList.toggle('left', !right); }
         const behind = Math.sin(t) < 0;
         if (e.behind !== behind) { e.behind = behind; e.el.classList.toggle('behind', behind); }
@@ -2014,7 +2021,7 @@ void main() {
       // 轨道与彗星
       const homeOn = this.view === 'home' && this.ready;
       this.orbA += ((homeOn && p > 0.7 ? 1 : 0) - this.orbA) * (1 - Math.exp(-dt * (homeOn ? 1.4 : 6)));
-      this.orbV += ((this.hover >= 0 || REDUCE ? 0 : 1) - this.orbV) * (1 - Math.exp(-dt * 3));
+      this.orbV += ((this.hover >= 0 || this.touching || REDUCE ? 0 : 1) - this.orbV) * (1 - Math.exp(-dt * 3));
       this.orbT += dt * ORBIT_W * this.orbV;
       if (this.orbA > 0.004) {
         const heads = this.entries.map((e) => ({ t: e.t0 + this.orbT, on: this.hover === e.k, a: 1 }));
