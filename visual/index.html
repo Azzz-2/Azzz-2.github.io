@@ -5,6 +5,7 @@
 <meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
 <title>VJ 小志</title>
 <meta name="description" content="VJ 小志的个人网站：十几万颗光粒子组成的他本人，点进每一页，粒子都会重组成那一页的内容。现场 MOTION / DOWN TOWN，AI 影像《夜的谱系》。">
+<meta name="version" content="1.1">
 <meta name="theme-color" content="#050505">
 <meta property="og:title" content="VJ 小志">
 <meta property="og:description" content="VJ 小志的个人网站：十几万颗光粒子组成的他本人，点进每一页，粒子都会重组成那一页的内容。现场 MOTION / DOWN TOWN，AI 影像《夜的谱系》。">
@@ -180,21 +181,42 @@ body.in-section .secnav { opacity: 1; visibility: visible; transition: opacity .
 .toast.is-on { opacity: 1; transform: translate(-50%, 0); }
 
 /* ------------------------------------------------------------------ 竖屏（手机） */
-html.portrait .who { bottom: calc(118px + var(--safe-b)); }
+html.portrait .who { bottom: calc(26px + var(--safe-b)); }
 html.portrait .who h1 { font-size: 54px; }
 html.portrait .who p { margin-top: 18px; }
 html.portrait .hint { display: none; }
-html.portrait .entries { inset: auto var(--pad) calc(26px + var(--safe-b)); display: grid; grid-template-columns: repeat(5, 1fr); gap: 4px; }
-html.portrait .entry { position: relative; width: auto; height: 62px; transform: none !important; display: flex; align-items: center; justify-content: center; border-top: 1px solid var(--line); opacity: 1; }
-html.portrait .entry .dot, html.portrait .entry .sub { display: none; }
-html.portrait .entry .l { position: static; transform: none; flex-direction: column; align-items: center; gap: 6px; }
-html.portrait .entry b { font-size: 15px; letter-spacing: .16em; margin-right: -.16em; }
+/* 光点入口（竖屏和矮横屏，html.radial）：标签居中，前半圈在光点下方、后半圈（.up）在上方，换边时滑过去；--lx 是贴边时往里挪的距离 */
+html.radial body.gl-on .entry .l {
+  left: var(--lx, 0px); top: 0; right: auto; flex-direction: column; align-items: center; gap: 5px;
+  transform: translate(-50%, 17px); transition: transform .55s var(--ease);
+  text-shadow: 0 0 2px var(--bg), 0 0 8px var(--bg);
+}
+/* 标签常压在粒子上：背后垫一团柔和的暗光，保证看得清 */
+html.radial body.gl-on .entry .l::before {
+  content: ""; position: absolute; z-index: -1; left: 50%; top: 50%; width: calc(100% + 44px); height: calc(100% + 30px);
+  transform: translate(-50%, -50%); border-radius: 50%; pointer-events: none;
+  background: radial-gradient(closest-side, rgba(5, 5, 5, .82), rgba(5, 5, 5, .55) 55%, rgba(5, 5, 5, 0));
+}
+html.radial body.gl-on .entry.up .l { transform: translate(-50%, calc(-100% - 17px)); }
+html.radial body.gl-on .entry em { font-size: 9px; color: var(--mid); }
+html.radial body.gl-on .entry b { font-size: 15px; letter-spacing: .2em; margin-right: -.2em; color: var(--ink); }
+html.radial body.gl-on .entry.on b, html.radial body.gl-on .entry:focus-visible b { color: #fff; }
+html.radial body.gl-on .entry.on em, html.radial body.gl-on .entry:focus-visible em { color: var(--warm); }
+html.radial body.gl-on .entry .sub { display: none; }
+html.radial body.gl-on .entry.behind { opacity: .78; }
 html.portrait .film-info { flex-direction: column; align-items: flex-start; gap: 22px; }
 html.portrait .works-side { width: auto; }
 html.portrait .clist { width: auto; }
 html.portrait .secnav { left: var(--pad); right: var(--pad); transform: none; justify-content: space-between; gap: 0; }
 html.portrait .secnav button { padding: 0 6px; flex-direction: column; align-items: center; justify-content: center; gap: 4px; height: 52px; }
 html.portrait .line { white-space: normal; text-align: center; }
+
+/* 横屏手机（矮屏）：名字缩小、去掉提示，给轨道让位 */
+@media (orientation: landscape) and (max-height: 520px) {
+  .who h1 { font-size: 40px; }
+  .who p { margin-top: 14px; max-width: 150px; }
+  .hint { display: none; }
+}
 
 /* ------------------------------------------------------------------ 没有 WebGL2：静态人像 + 文字版 */
 body.no-gl .entries { inset: auto var(--pad) auto auto; top: 50%; transform: translateY(-50%); display: flex; flex-direction: column; gap: 6px; opacity: 1; }
@@ -213,6 +235,13 @@ body.no-gl .cap .nm { font-size: clamp(64px, 14vw, 180px); }
 body.no-gl .wall-box { width: min(90vw, 720px) !important; aspect-ratio: 16 / 9; }
 body.no-gl .film-info { position: static !important; transform: none !important; width: min(90vw, 720px) !important; }
 body.no-gl #p-about .fb-big { display: none; }
+/* 竖屏又没有 WebGL：没有轨道，入口退回底部一排 */
+html.portrait body.no-gl .who { bottom: calc(118px + var(--safe-b)); }
+html.portrait body.no-gl .entries { inset: auto var(--pad) calc(26px + var(--safe-b)); top: auto; transform: none; display: grid; grid-template-columns: repeat(5, 1fr); gap: 4px; }
+html.portrait body.no-gl .entry { height: 62px; display: flex; align-items: center; justify-content: center; border-top: 1px solid var(--line); opacity: 1; }
+html.portrait body.no-gl .entry .l { flex-direction: column; align-items: center; gap: 6px; }
+html.portrait body.no-gl .entry .sub { display: none; }
+html.portrait body.no-gl .entry b { font-size: 15px; letter-spacing: .16em; margin-right: -.16em; }
 
 /* ------------------------------------------------------------------ 播放器 */
 .theater { position: fixed; inset: 0; z-index: 60; display: grid; grid-template-rows: auto 1fr auto; background: #020203; opacity: 0; transition: opacity .45s var(--ease); }
@@ -813,7 +842,7 @@ void main() {
 })();
 
 /* 粒子系统：两组目标（A → B）之间插值；飞行中加湍流；作品光点屏从视频取色；人像发梢循环飘散；鼠标尾流在屏幕空间推开粒子。
-   Orbit：首页的轨道细线 + 四颗彗星（头 + 尾迹），每帧在 CPU 上算好位置再画。 */
+   Orbit：首页的轨道细线 + 五颗彗星（头 + 尾迹），每帧在 CPU 上算好位置再画。 */
 (function () {
   const XZ = window.XZ;
 
@@ -1063,7 +1092,7 @@ void main() {
   };
 
   // ================================================================ Orbit
-  const RING = 2600, TRAIL = 1500, HEADS = 4;
+  const RING = 2600, TRAIL = 1500, HEADS = 5;
   function Orbit(G) {
     const gl = G.gl;
     this.G = G; this.gl = gl;
@@ -1488,7 +1517,9 @@ void main() {
       this.W = window.innerWidth; this.H = window.innerHeight;
       this.dpr = Math.min(window.devicePixelRatio || 1, COARSE ? 1.5 : 1.75) * (this.dprScale || 1);
       this.land = this.W / this.H >= 1.12;
+      this.radial = !this.land || this.H < 520;                         // 竖屏和矮横屏：入口标签放在光点上下
       document.documentElement.classList.toggle('portrait', !this.land);
+      document.documentElement.classList.toggle('radial', this.radial);
       $('hint').querySelector('span').textContent = COARSE ? '手指划过 · 拨动光粒子' : '移动鼠标 · 拨动光粒子';
     },
 
@@ -1505,11 +1536,19 @@ void main() {
         const cx = W * 0.38 - 0.4418 * s, cy = -0.425 * H + 0.3478 * s;
         L.portrait = { cx, cy, S: s };
         L.orbit = { cx: cx - 0.04 * s, cy: cy + 0.12 * s, a: 0.6 * s, b: 0.19 * s, depth: 0.42 * s, rot: -14 * DEG };
+        // 矮横屏（手机横过来）：标签改放光点上下，轨道收一点，别碰到左下角的名字
+        if (H < 520) Object.assign(L.orbit, { a: 0.5 * s, depth: 0.2 * s });
       } else {
         const s = Math.min(W * 1.28, H * 0.64);
-        const cx = W * 0.05, cy = -H / 2 + 64 + 0.3478 * s;
+        // 人像从发顶（照片 v≈0.08）到手（v=1）约 0.92s 高：放在页眉和左下角名字之间，有富余就上下居中
+        const top = (document.querySelector('.top').getBoundingClientRect().bottom || 60) + 12;
+        const bottom = (document.querySelector('.who').getBoundingClientRect().top || H - 120) - 12;
+        const y0 = top + Math.max(0, (bottom - top - 0.92 * s) / 2);
+        const cx = W * 0.05, cy = -H / 2 + y0 + (S.V0 - 0.08) * s;
         L.portrait = { cx, cy, S: s };
-        L.orbit = { cx: cx - 0.02 * s, cy: cy + 0.2 * s, a: W * 0.46, b: 0.1 * s, depth: 0.3 * s, rot: -10 * DEG };
+        // 竖屏：轨道收窄加高、绕着脸转，五个标签上下错开才放得下（前半圈从下巴下面过，后半圈藏到头发后面）
+        const a = Math.min(W * 0.42, 0.36 * s);
+        L.orbit = { cx: cx - 0.02 * s, cy: cy + 0.14 * s, a, b: a * 0.7, depth: 0.3 * s, rot: -10 * DEG };
       }
       return L;
     },
@@ -1723,6 +1762,8 @@ void main() {
       this.entries.forEach((e) => {
         const l = e.el.querySelector('.l'), s = e.el.querySelector('.sub');
         e.w = Math.max(l.offsetWidth, s.offsetWidth) || 150;
+        e.lw = l.offsetWidth || 48;
+        e.lx = null; e.up = null; e.right = null;
       });
     },
 
@@ -1808,11 +1849,11 @@ void main() {
     onResize() {
       clearTimeout(this.rt);
       this.rt = setTimeout(() => {
-        const pw = this.W, ph = this.H, pland = this.land;
+        const pw = this.W, ph = this.H, pland = this.land, prad = this.radial;
         this.measure();
         if (!this.gl) return;
         this.resizeGL();
-        const big = Math.abs(this.W - pw) > 2 || Math.abs(this.H - ph) / ph > 0.15 || pland !== this.land;
+        const big = Math.abs(this.W - pw) > 2 || Math.abs(this.H - ph) / ph > 0.15 || pland !== this.land || prad !== this.radial;
         if (big) {
           this.forms = {};
           this.L = this.layout();
@@ -1835,7 +1876,7 @@ void main() {
       let focus, dur, delay, turb;
       if (prev === 'home') {
         const e = this.entries.find((x) => x.id === view);
-        focus = e && e.p && this.land ? [e.p[0], e.p[1]] : [0, L.H / 2]; dur = 2.1; delay = 0.42; turb = 130;
+        focus = e && e.p ? [e.p[0], e.p[1]] : [0, L.H / 2]; dur = 2.1; delay = 0.42; turb = 130;
       } else if (view === 'home') { focus = [L.portrait.cx, L.portrait.cy]; dur = 2.3; delay = 0.5; turb = 110; }
       else { focus = from || [0, L.H / 2]; dur = 1.8; delay = 0.38; turb = 120; }
       if (REDUCE) { dur = 0.7; delay = 0; turb = 0; }
@@ -1974,12 +2015,19 @@ void main() {
       this.entries.forEach((e) => {
         const t = e.t0 + this.orbT, p = XZ.Orbit.point(geo, t), s = this.project(p);
         e.p = p;
-        if (!this.land) return;
-        let right = p[0] >= geo.cx;
-        if (right && s[0] + 30 + e.w > this.W - 12) right = false;
-        else if (!right && s[0] - 30 - e.w < 12) right = true;
-        if (e.right !== right) { e.right = right; e.el.classList.toggle('right', right); e.el.classList.toggle('left', !right); }
         const behind = Math.sin(t) < 0;
+        if (!this.radial) {
+          // 横屏：标签在光点左右，贴近屏幕边缘时换边
+          let right = p[0] >= geo.cx;
+          if (right && s[0] + 30 + e.w > this.W - 12) right = false;
+          else if (!right && s[0] - 30 - e.w < 12) right = true;
+          if (e.right !== right) { e.right = right; e.el.classList.toggle('right', right); e.el.classList.toggle('left', !right); }
+        } else {
+          // 竖屏 / 矮横屏：标签居中，后半圈放光点上方、前半圈放下方；靠近屏幕边缘时整体往里挪
+          if (e.up !== behind) { e.up = behind; e.el.classList.toggle('up', behind); }
+          const half = e.lw / 2, lx = clamp(s[0], 12 + half, this.W - 12 - half) - s[0];
+          if (e.lx === null || Math.abs(lx - e.lx) > 0.5) { e.lx = lx; e.el.style.setProperty('--lx', lx.toFixed(1) + 'px'); }
+        }
         if (e.behind !== behind) { e.behind = behind; e.el.classList.toggle('behind', behind); }
         e.el.style.transform = `translate3d(${s[0].toFixed(1)}px, ${s[1].toFixed(1)}px, 0)`;
       });
