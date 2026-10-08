@@ -542,16 +542,13 @@ button {
   line-height: 1.6;
 }
 
-.video-actions a,
-.video-retry,
-.video-fallback {
+.video-retry {
   display: inline-flex;
   align-items: center;
   min-height: 44px;
 }
 
-.video-retry,
-.video-fallback {
+.video-retry {
   padding: 0 12px;
   border: 1px solid var(--line);
   background: transparent;
@@ -564,18 +561,30 @@ button {
   display: none;
 }
 
-.video-actions a:focus-visible,
 .video-retry:focus-visible,
-.video-fallback:focus-visible {
+.video-start:focus-visible {
   outline: 2px solid var(--ink);
   outline-offset: 4px;
 }
 
-.video-browser-tip {
-  margin: 0;
-  color: var(--muted);
-  font-size: 12px;
-  line-height: 1.7;
+.video-start {
+  position: absolute;
+  top: 50%;
+  left: 50%;
+  transform: translate(-50%, -50%);
+  min-height: 48px;
+  padding: 12px 20px;
+  border: 1px solid rgba(244, 240, 233, 0.65);
+  border-radius: 2px;
+  background: rgba(5, 5, 5, 0.8);
+  color: var(--ink);
+  font: inherit;
+  font-size: 13px;
+  cursor: pointer;
+}
+
+.video-start[hidden] {
+  display: none;
 }
 
 .video-notes {

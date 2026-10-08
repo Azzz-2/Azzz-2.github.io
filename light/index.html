@@ -13,7 +13,7 @@
       rel="icon"
       href="data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 64 64'%3E%3Crect width='64' height='64' fill='%23050505'/%3E%3Cpath d='M16 13h8v30h24v8H16z' fill='%23f4f0e9'/%3E%3Cpath d='M43 13h5v23h-5z' fill='%23f0442f'/%3E%3C/svg%3E"
     />
-    <link rel="stylesheet" href="../src/site.css?v=20261008-hls" />
+    <link rel="stylesheet" href="../src/site.css?v=20261008-inline" />
   </head>
   <body>
     <div class="page-noise" aria-hidden="true"></div>
@@ -128,7 +128,6 @@
           <span>SHOWREEL / 作品影像</span>
         </div>
         <div class="video-gallery">
-          <p class="video-browser-tip" hidden>如果微信内无法播放，可点右上角“…”选择“在浏览器中打开”。</p>
           <article class="video-piece reveal">
             <div class="video-piece-head">
               <span>01 / SHOWREEL</span>
@@ -140,20 +139,20 @@
                 controls
                 playsinline
                 webkit-playsinline
-                preload="none"
+                preload="metadata"
                 poster="../public/media/video-cover-01.jpg"
                 src="../public/media/showreel.mp4?v=20261008"
                 data-hls="../public/media/hls-showreel/master.m3u8"
+                data-hls-low="../public/media/hls-showreel/0/index.m3u8"
               >
                 你的浏览器暂不支持视频播放。
               </video>
+              <button class="video-start" type="button" aria-label="播放作品影像一">播放视频 ▶</button>
               <div class="video-corner" aria-hidden="true">LIGHTING / LIVE 01</div>
             </div>
             <div class="video-actions">
               <p class="video-status" role="status" aria-live="polite" hidden></p>
               <button class="video-retry" type="button" aria-label="重试播放作品影像一" hidden>重试播放</button>
-              <button class="video-fallback" type="button" aria-label="切换作品影像一的备用播放" hidden>切换备用播放</button>
-              <a href="../public/media/showreel.mp4?v=20261008" target="_blank" rel="noopener">单独打开视频 ↗</a>
             </div>
           </article>
 
@@ -168,20 +167,20 @@
                 controls
                 playsinline
                 webkit-playsinline
-                preload="none"
+                preload="metadata"
                 poster="../public/media/video-cover-03.jpg"
                 src="../public/media/live-performance-02.mp4?v=20261008"
                 data-hls="../public/media/hls-live-session/master.m3u8"
+                data-hls-low="../public/media/hls-live-session/0/index.m3u8"
               >
                 你的浏览器暂不支持视频播放。
               </video>
+              <button class="video-start" type="button" aria-label="播放作品影像三">播放视频 ▶</button>
               <div class="video-corner" aria-hidden="true">LIGHTING / LIVE 03</div>
             </div>
             <div class="video-actions">
               <p class="video-status" role="status" aria-live="polite" hidden></p>
               <button class="video-retry" type="button" aria-label="重试播放作品影像三" hidden>重试播放</button>
-              <button class="video-fallback" type="button" aria-label="切换作品影像三的备用播放" hidden>切换备用播放</button>
-              <a href="../public/media/live-performance-02.mp4?v=20261008" target="_blank" rel="noopener">单独打开视频 ↗</a>
             </div>
           </article>
         </div>
@@ -265,6 +264,6 @@
       <a href="#top">BACK TO TOP ↑</a>
     </footer>
 
-    <script src="../src/site.js?v=20261008-hls"></script>
+    <script src="../src/site.js?v=20261008-inline"></script>
   </body>
 </html>
