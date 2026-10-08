@@ -20,25 +20,74 @@ if ("IntersectionObserver" in window) {
 
 const videos = document.querySelectorAll(".video-wrap video");
 
-document.querySelectorAll(".video-wrap").forEach((videoWrap) => {
-  const video = videoWrap.querySelector("video");
-  const playButton = videoWrap.querySelector(".video-play");
+const metadataObserver = "IntersectionObserver" in window
+  ? new IntersectionObserver((entries) => {
+      entries.forEach((entry) => {
+        if (entry.isIntersecting) {
+          entry.target.preload = "metadata";
+          metadataObserver.unobserve(entry.target);
+        }
+      });
+    }, { rootMargin: "160px" })
+  : null;
 
-  if (!video || !playButton) {
-    return;
-  }
+videos.forEach((video) => {
+  const piece = video.closest(".video-piece");
+  const status = piece.querySelector(".video-status");
+  const retry = piece.querySelector(".video-retry");
+  let loadingTimer;
+  let attempt = 0;
 
-  const syncPlayButton = () => {
-    playButton.classList.toggle("is-hidden", !video.paused);
+  const clearLoading = () => {
+    clearTimeout(loadingTimer);
+    loadingTimer = undefined;
   };
 
-  playButton.addEventListener("click", async () => {
+  const showProblem = (message) => {
+    clearLoading();
+    status.textContent = message;
+    status.hidden = false;
+    retry.hidden = false;
+  };
+
+  const clearProblem = () => {
+    clearLoading();
+    status.hidden = true;
+    status.textContent = "";
+    retry.hidden = true;
+  };
+
+  const showLoading = () => {
+    clearLoading();
+    status.textContent = "视频加载中…";
+    status.hidden = false;
+    retry.hidden = true;
+    loadingTimer = setTimeout(() => {
+      showProblem("视频加载较慢，可以重试或单独打开视频。");
+    }, 15000);
+  };
+
+  retry.addEventListener("click", () => {
+    const currentAttempt = ++attempt;
+    clearProblem();
+    video.preload = "auto";
+    showLoading();
     try {
-      await video.play();
+      video.load();
+      const playing = video.play();
+      if (playing && typeof playing.catch === "function") {
+        playing.catch(() => {
+          if (currentAttempt === attempt) {
+            showProblem("未能开始播放，请点视频播放按钮或单独打开视频。");
+          }
+        });
+      }
     } catch {
-      playButton.classList.remove("is-hidden");
+      showProblem("未能开始播放，请单独打开视频。");
     }
   });
+
+  if (metadataObserver) metadataObserver.observe(video);
 
   video.addEventListener("play", () => {
     videos.forEach((otherVideo) => {
@@ -46,8 +95,19 @@ document.querySelectorAll(".video-wrap").forEach((videoWrap) => {
         otherVideo.pause();
       }
     });
-    syncPlayButton();
+    showLoading();
   });
-  video.addEventListener("pause", syncPlayButton);
-  video.addEventListener("ended", syncPlayButton);
+  video.addEventListener("waiting", () => {
+    if (!video.paused) showLoading();
+  });
+  video.addEventListener("playing", clearProblem);
+  video.addEventListener("pause", () => {
+    ++attempt;
+    clearLoading();
+    if (retry.hidden) status.hidden = true;
+  });
+  video.addEventListener("ended", clearProblem);
+  video.addEventListener("error", () => {
+    showProblem("视频未能加载，请重试或单独打开视频。");
+  });
 });

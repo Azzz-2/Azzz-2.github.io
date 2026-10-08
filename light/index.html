@@ -13,7 +13,7 @@
       rel="icon"
       href="data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 64 64'%3E%3Crect width='64' height='64' fill='%23050505'/%3E%3Cpath d='M16 13h8v30h24v8H16z' fill='%23f4f0e9'/%3E%3Cpath d='M43 13h5v23h-5z' fill='%23f0442f'/%3E%3C/svg%3E"
     />
-    <link rel="stylesheet" href="../src/site.css" />
+    <link rel="stylesheet" href="../src/site.css?v=20261008" />
   </head>
   <body>
     <div class="page-noise" aria-hidden="true"></div>
@@ -138,16 +138,19 @@
                 id="portfolio-video"
                 controls
                 playsinline
+                webkit-playsinline
                 preload="none"
-                poster="./public/media/video-cover-01.jpg"
+                poster="../public/media/video-cover-01.jpg"
+                src="../public/media/showreel.mp4?v=20261008"
               >
-                <source src="../public/media/showreel.mp4" type="video/mp4" />
                 你的浏览器暂不支持视频播放。
               </video>
-              <button class="video-play" type="button" aria-label="播放作品影像一">
-                <span>PLAY</span>
-              </button>
               <div class="video-corner" aria-hidden="true">LIGHTING / LIVE 01</div>
+            </div>
+            <div class="video-actions">
+              <p class="video-status" role="status" aria-live="polite" hidden></p>
+              <button class="video-retry" type="button" aria-label="重试播放作品影像一" hidden>重试播放</button>
+              <a href="../public/media/showreel.mp4?v=20261008" target="_blank" rel="noopener">单独打开视频 ↗</a>
             </div>
           </article>
 
@@ -161,16 +164,19 @@
                 id="portfolio-video-03"
                 controls
                 playsinline
+                webkit-playsinline
                 preload="none"
-                poster="./public/media/video-cover-03.jpg"
+                poster="../public/media/video-cover-03.jpg"
+                src="../public/media/live-performance-02.mp4?v=20261008"
               >
-                <source src="../public/media/live-performance-02.mp4" type="video/mp4" />
                 你的浏览器暂不支持视频播放。
               </video>
-              <button class="video-play" type="button" aria-label="播放作品影像三">
-                <span>PLAY</span>
-              </button>
               <div class="video-corner" aria-hidden="true">LIGHTING / LIVE 03</div>
+            </div>
+            <div class="video-actions">
+              <p class="video-status" role="status" aria-live="polite" hidden></p>
+              <button class="video-retry" type="button" aria-label="重试播放作品影像三" hidden>重试播放</button>
+              <a href="../public/media/live-performance-02.mp4?v=20261008" target="_blank" rel="noopener">单独打开视频 ↗</a>
             </div>
           </article>
         </div>
@@ -254,6 +260,6 @@
       <a href="#top">BACK TO TOP ↑</a>
     </footer>
 
-    <script src="../src/site.js"></script>
+    <script src="../src/site.js?v=20261008"></script>
   </body>
 </html>
