@@ -543,13 +543,15 @@ button {
 }
 
 .video-actions a,
-.video-retry {
+.video-retry,
+.video-fallback {
   display: inline-flex;
   align-items: center;
   min-height: 44px;
 }
 
-.video-retry {
+.video-retry,
+.video-fallback {
   padding: 0 12px;
   border: 1px solid var(--line);
   background: transparent;
@@ -563,9 +565,17 @@ button {
 }
 
 .video-actions a:focus-visible,
-.video-retry:focus-visible {
+.video-retry:focus-visible,
+.video-fallback:focus-visible {
   outline: 2px solid var(--ink);
   outline-offset: 4px;
+}
+
+.video-browser-tip {
+  margin: 0;
+  color: var(--muted);
+  font-size: 12px;
+  line-height: 1.7;
 }
 
 .video-notes {

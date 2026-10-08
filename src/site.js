@@ -20,6 +20,11 @@ if ("IntersectionObserver" in window) {
 
 const videos = document.querySelectorAll(".video-wrap video");
 
+const browserTip = document.querySelector(".video-browser-tip");
+if (browserTip && /MicroMessenger/i.test(navigator.userAgent)) {
+  browserTip.hidden = false;
+}
+
 const metadataObserver = "IntersectionObserver" in window
   ? new IntersectionObserver((entries) => {
       entries.forEach((entry) => {
@@ -35,6 +40,14 @@ videos.forEach((video) => {
   const piece = video.closest(".video-piece");
   const status = piece.querySelector(".video-status");
   const retry = piece.querySelector(".video-retry");
+  const fallback = piece.querySelector(".video-fallback");
+  const mp4Source = video.getAttribute("src");
+  const hlsSource = video.dataset.hls;
+  let usingHls = Boolean(hlsSource && (
+    video.canPlayType("application/vnd.apple.mpegurl") ||
+    video.canPlayType("application/x-mpegURL")
+  ));
+  if (usingHls) video.src = hlsSource;
   let loadingTimer;
   let attempt = 0;
 
@@ -48,6 +61,7 @@ videos.forEach((video) => {
     status.textContent = message;
     status.hidden = false;
     retry.hidden = false;
+    fallback.hidden = !usingHls;
   };
 
   const clearProblem = () => {
@@ -55,6 +69,7 @@ videos.forEach((video) => {
     status.hidden = true;
     status.textContent = "";
     retry.hidden = true;
+    fallback.hidden = true;
   };
 
   const showLoading = () => {
@@ -67,7 +82,7 @@ videos.forEach((video) => {
     }, 15000);
   };
 
-  retry.addEventListener("click", () => {
+  const retryPlayback = () => {
     const currentAttempt = ++attempt;
     clearProblem();
     video.preload = "auto";
@@ -85,6 +100,13 @@ videos.forEach((video) => {
     } catch {
       showProblem("未能开始播放，请单独打开视频。");
     }
+  };
+
+  retry.addEventListener("click", retryPlayback);
+  fallback.addEventListener("click", () => {
+    usingHls = false;
+    video.src = mp4Source;
+    retryPlayback();
   });
 
   if (metadataObserver) metadataObserver.observe(video);
