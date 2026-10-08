@@ -41,6 +41,8 @@ videos.forEach((video) => {
   let playbackRequested = false;
   let resumeAt = 0;
   let probeController;
+  let lastProgressPosition = 0;
+  let lastProgressAt = performance.now();
 
   const clearLoading = () => {
     clearTimeout(loadingTimer);
@@ -71,7 +73,11 @@ videos.forEach((video) => {
     probeController?.abort();
     const controller = new AbortController();
     probeController = controller;
-    const probeTimer = setTimeout(() => controller.abort(), 8000);
+    let probeTimedOut = false;
+    const probeTimer = setTimeout(() => {
+      probeTimedOut = true;
+      controller.abort();
+    }, 8000);
     let url = new URL(sources[sourceIndex], document.baseURI);
     try {
       for (let depth = 0; depth < 3; depth += 1) {
@@ -82,7 +88,16 @@ videos.forEach((video) => {
         });
         if (!response.ok) throw new Error("Video connection failed");
         if (!isPlaylist) {
-          await response.body?.cancel();
+          const reader = response.body?.getReader();
+          if (reader) {
+            const sample = await reader.read();
+            await reader.cancel();
+            if (!sample.value?.length) throw new Error("Empty video response");
+          } else if (response.status === 206) {
+            if (!(await response.arrayBuffer()).byteLength) throw new Error("Empty video response");
+          } else {
+            throw new Error("Video sample unavailable");
+          }
           if (currentAttempt === attempt && !status.hidden) {
             status.textContent = `${message}（${diagnostic}，视频数据可读取）`;
           }
@@ -95,8 +110,9 @@ videos.forEach((video) => {
         url = new URL(reference, url);
       }
     } catch {
-      if (currentAttempt === attempt && !status.hidden && !controller.signal.aborted) {
-        status.textContent = `${message}（${diagnostic}，视频连接检查未通过）`;
+      if (currentAttempt === attempt && !status.hidden && (!controller.signal.aborted || probeTimedOut)) {
+        const result = probeTimedOut ? "视频数据读取超时" : "视频连接检查未通过";
+        status.textContent = `${message}（${diagnostic}，${result}）`;
       }
     } finally {
       clearTimeout(probeTimer);
@@ -112,20 +128,44 @@ videos.forEach((video) => {
     return true;
   };
 
-  const showLoading = () => {
+  const watchPlayback = () => {
     clearLoading();
+    if (!playbackRequested || video.ended) return;
+    const currentAttempt = attempt;
+    const checkProgress = () => {
+      if (currentAttempt !== attempt || !playbackRequested || video.ended) return;
+      const now = performance.now();
+      if (!video.paused && !video.seeking && video.currentTime > lastProgressPosition + 0.05 && video.readyState >= 3) {
+        lastProgressPosition = video.currentTime;
+        lastProgressAt = now;
+        clearProblem();
+        start.hidden = true;
+        watchPlayback();
+        return;
+      }
+      const remaining = 15000 - (now - lastProgressAt);
+      if (remaining > 0) {
+        loadingTimer = setTimeout(checkProgress, remaining);
+      } else if (!recoverPlayback()) {
+        showProblem("视频连接超时，请点重试播放。");
+      }
+    };
+    loadingTimer = setTimeout(checkProgress, Math.max(0, 15000 - (performance.now() - lastProgressAt)));
+  };
+
+  const showLoading = () => {
     status.textContent = "视频加载中…";
     status.hidden = false;
     retry.hidden = true;
     start.hidden = true;
-    loadingTimer = setTimeout(() => {
-      if (!recoverPlayback()) showProblem("视频连接超时，请点重试播放。");
-    }, 15000);
+    watchPlayback();
   };
 
   const startPlayback = (reload = false) => {
     const currentAttempt = ++attempt;
     playbackRequested = true;
+    lastProgressPosition = video.currentTime;
+    lastProgressAt = performance.now();
     clearProblem();
     video.preload = "auto";
     showLoading();
@@ -167,6 +207,8 @@ videos.forEach((video) => {
 
   video.addEventListener("play", () => {
     playbackRequested = true;
+    lastProgressPosition = video.currentTime;
+    lastProgressAt = performance.now();
     videos.forEach((otherVideo) => {
       if (otherVideo !== video) {
         otherVideo.pause();
@@ -178,8 +220,27 @@ videos.forEach((video) => {
     if (!video.paused) showLoading();
   });
   video.addEventListener("playing", () => {
+    if (video.paused) return;
     clearProblem();
     start.hidden = true;
+    watchPlayback();
+  });
+  video.addEventListener("timeupdate", () => {
+    if (video.paused || video.seeking) return;
+    if (video.currentTime > lastProgressPosition + 0.05) {
+      lastProgressPosition = video.currentTime;
+      lastProgressAt = performance.now();
+      clearProblem();
+      start.hidden = true;
+      watchPlayback();
+    } else if (video.currentTime < lastProgressPosition) {
+      lastProgressPosition = video.currentTime;
+    }
+  });
+  video.addEventListener("seeked", () => {
+    lastProgressPosition = video.currentTime;
+    lastProgressAt = performance.now();
+    watchPlayback();
   });
   video.addEventListener("pause", () => {
     if (!video.paused) return;
