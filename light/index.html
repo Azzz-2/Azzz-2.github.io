@@ -1,269 +1,545 @@
 <!doctype html>
 <html lang="zh-CN">
-  <head>
-    <meta charset="UTF-8" />
-    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-    <meta
-      name="description"
-      content="灯光小1（徐依帆）个人作品集，灯光师，21岁，三年工作经验。"
-    />
-    <meta name="theme-color" content="#050505" />
-    <title>灯光小1｜徐依帆｜灯光师作品集</title>
-    <link
-      rel="icon"
-      href="data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 64 64'%3E%3Crect width='64' height='64' fill='%23050505'/%3E%3Cpath d='M16 13h8v30h24v8H16z' fill='%23f4f0e9'/%3E%3Cpath d='M43 13h5v23h-5z' fill='%23f0442f'/%3E%3C/svg%3E"
-    />
-    <link rel="stylesheet" href="../src/site.css?v=20261008-inline2" />
-  </head>
-  <body>
-    <div class="page-noise" aria-hidden="true"></div>
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width,initial-scale=1">
+<title>灯光小1 · 徐依帆</title>
+<meta name="description" content="灯光师徐依帆（灯光小1）：灯光设计、控台编程、现场控场。">
+<link rel="preload" as="image" href="media/hero-poster.jpg">
+<style>
+:root {
+  --bg: #050506;
+  --ink: #f3eee6;
+  --muted: #8f8a92;
+  --line: rgba(255,255,255,.09);
+  --amber: #ff9a3c;
+  --amber-soft: #ffc27a;
+  --sans: "PingFang SC","HarmonyOS Sans SC","Microsoft YaHei","Noto Sans SC",system-ui,sans-serif;
+  --mono: "Cascadia Mono","SF Mono",Consolas,"Courier New",monospace;
+  --gutter: clamp(16px, 5vw, 80px);
+  --ease: cubic-bezier(.2,.7,.2,1);
+}
+* { box-sizing: border-box; margin: 0; padding: 0; }
+/* 整页吸附：每次滚动停在一页的开头 */
+html { background: var(--bg); scroll-snap-type: y mandatory; scroll-behavior: smooth; }
+body { background: var(--bg); color: var(--ink); font-family: var(--sans); line-height: 1.75; -webkit-font-smoothing: antialiased; overflow-x: hidden; }
+body.locked { overflow: hidden; }
+a { color: inherit; text-decoration: none; }
+button { font: inherit; color: inherit; background: none; border: 0; cursor: pointer; }
+video, img { display: block; }
+.mono { font-family: var(--mono); letter-spacing: .12em; }
+.label { font-family: var(--mono); font-size: 12px; letter-spacing: .18em; color: var(--amber); }
+:focus-visible { outline: 2px solid var(--amber); outline-offset: 3px; }
 
-    <header class="site-header">
-      <a class="brand" href="#top" aria-label="返回顶部">
-        <span class="brand-mark">L/01</span>
-        <span>灯光小1</span>
-      </a>
-      <nav aria-label="主导航">
-        <a href="#profile">简介</a>
-        <a href="#experience">经历</a>
-        <a href="#showreel">影像</a>
-        <a href="#works">现场</a>
-      </nav>
-    </header>
+.page { position: relative; height: 100svh; min-height: 520px; overflow: hidden; scroll-snap-align: start; scroll-snap-stop: always; background: #000; }
 
-    <main id="top">
-      <section class="hero">
-        <div class="hero-copy">
-          <p class="eyebrow reveal">LIGHTING DESIGNER · PORTFOLIO 2026</p>
-          <h1 class="hero-title reveal">
-            <span class="outline">LIGHT</span>
-            <span>THE NIGHT.</span>
-          </h1>
-          <div class="hero-meta reveal">
-            <div>
-              <span class="meta-label">艺名</span>
-              <strong>灯光小1</strong>
-            </div>
-            <div>
-              <span class="meta-label">姓名</span>
-              <strong>徐依帆</strong>
-            </div>
-          </div>
-        </div>
+/* ===== 进入页 ===== */
+#gate { position: fixed; inset: 0; z-index: 100; background: #000; display: grid; place-items: center; text-align: center; transition: opacity .9s var(--ease), visibility .9s; }
+#gate.gone { opacity: 0; visibility: hidden; }
+.gate-top { position: absolute; top: 28px; left: 0; right: 0; font-size: 11px; color: var(--muted); }
+.go { position: relative; width: 148px; height: 148px; border-radius: 50%; display: grid; place-items: center;
+  background: radial-gradient(circle at 50% 40%, #ffb35c, #e0661a 70%); color: #1a0d03; font-family: var(--mono); font-weight: 700; font-size: 34px; letter-spacing: .08em;
+  box-shadow: 0 0 0 1px rgba(255,154,60,.4), 0 0 60px rgba(255,154,60,.45), inset 0 -6px 0 rgba(0,0,0,.25); transition: transform .15s; }
+.go:hover { transform: scale(1.04); }
+.go:active { transform: scale(.96); }
+.go::before, .go::after { content: ""; position: absolute; inset: -14px; border-radius: 50%; border: 1px solid rgba(255,154,60,.35); animation: ring 2.4s ease-out infinite; }
+.go::after { animation-delay: 1.2s; }
+@keyframes ring { from { transform: scale(.9); opacity: 1; } to { transform: scale(1.5); opacity: 0; } }
+.gate-hint { margin-top: 34px; font-size: 15px; color: #cfc8bf; letter-spacing: .3em; }
+.gate-hint small { display: block; font-family: var(--mono); font-size: 10px; color: var(--muted); letter-spacing: .3em; margin-top: 4px; }
+#flash { position: fixed; inset: 0; z-index: 101; pointer-events: none; background: radial-gradient(circle at 50% 50%, #fff6e8, #ffb35c 45%, rgba(255,154,60,0) 80%); opacity: 0; }
+#flash.on { animation: flash .7s ease-out; }
+@keyframes flash { 0% { opacity: 0; } 12% { opacity: .95; } 100% { opacity: 0; } }
 
-        <div class="hero-portrait reveal">
-          <div class="portrait-frame">
-            <img
-              src="../public/media/portrait.jpg"
-              alt="徐依帆个人肖像"
-              width="960"
-              height="1280"
-            />
-          </div>
-          <span class="portrait-index">01</span>
-          <span class="portrait-caption">SHAPE / SHADOW / RHYTHM</span>
-        </div>
+/* ===== 导航 + 页码 ===== */
+.nav { position: fixed; top: 0; left: 0; right: 0; z-index: 50; display: flex; justify-content: space-between; align-items: center; padding: 18px var(--gutter);
+  background: linear-gradient(180deg, rgba(0,0,0,.55), rgba(0,0,0,0)); opacity: 0; pointer-events: none; transition: opacity .6s; }
+.nav.show { opacity: 1; pointer-events: auto; }
+.logo { font-weight: 800; letter-spacing: .04em; display: flex; gap: 10px; align-items: center; }
+.logo i { width: 8px; height: 8px; border-radius: 50%; background: var(--amber); box-shadow: 0 0 12px var(--amber); }
+.nav ul { list-style: none; display: flex; gap: 30px; font-size: 14px; color: #bdb7bf; }
+.nav ul a:hover, .nav ul a.cur { color: var(--ink); }
+.dots { position: fixed; z-index: 50; right: 18px; top: 50%; transform: translateY(-50%); display: grid; gap: 12px; opacity: 0; transition: opacity .6s; }
+.dots.show { opacity: 1; }
+.dots a { width: 8px; height: 8px; border-radius: 50%; border: 1px solid rgba(255,255,255,.45); transition: background .3s, transform .3s, border-color .3s; }
+.dots a.cur { background: var(--amber); border-color: var(--amber); transform: scale(1.3); }
+@media (max-width: 760px) { .nav ul li:not(:last-child) { display: none; } .dots { right: 8px; } }
 
-        <a class="scroll-cue" href="#profile">
-          <span>SCROLL TO EXPLORE</span>
-          <i aria-hidden="true"></i>
-        </a>
-      </section>
+/* 按时间点出现的元素 */
+.cue-in { opacity: 0; transform: translateY(14px); transition: opacity .8s var(--ease), transform .8s var(--ease); }
+.cue-in.on { opacity: 1; transform: none; }
 
-      <section class="profile section-pad" id="profile">
-        <div class="section-label">
-          <span>02</span>
-          <span>PROFILE / 简介</span>
-        </div>
-        <div class="profile-grid">
-          <div class="profile-statement reveal">
-            <p>让每一道光都有方向，</p>
-            <p>让每一次明暗都服务于现场。</p>
-          </div>
-          <div class="profile-facts reveal">
-            <article>
-              <strong>21</strong>
-              <span>年龄 / AGE</span>
-            </article>
-            <article>
-              <strong>03</strong>
-              <span>年工作经验 / YEARS</span>
-            </article>
-          </div>
-        </div>
-      </section>
+/* ===== 1 首屏 ===== */
+.hero video, .hero .poster { position: absolute; inset: 0; width: 100%; height: 100%; object-fit: cover; object-position: 62% 50%; }
+.hero::after { content: ""; position: absolute; inset: 0; pointer-events: none;
+  background: linear-gradient(90deg, rgba(0,0,0,.78) 0%, rgba(0,0,0,.35) 34%, rgba(0,0,0,0) 55%), linear-gradient(0deg, rgba(0,0,0,.6) 0%, rgba(0,0,0,0) 20%); }
+.hero-copy { position: absolute; z-index: 2; left: var(--gutter); top: 0; bottom: 0; display: flex; flex-direction: column; justify-content: center; max-width: 640px; }
+.hero-real { font-size: clamp(16px, 1.6vw, 20px); letter-spacing: .6em; color: #ddd6cc; }
+.hero-title { font-size: clamp(64px, 8.6vw, 150px); font-weight: 900; line-height: .95; letter-spacing: -.02em; margin: 14px 0 22px; color: #2a2622; transition: color .25s, text-shadow .25s; }
+.hero-title span { font-family: var(--mono); font-weight: 700; }
+.hero-title.lit { color: var(--ink); text-shadow: 0 0 60px rgba(255,170,90,.35); }
+.hero-title.lit span { color: var(--amber); text-shadow: 0 0 40px var(--amber); }
+.flap { display: inline-flex; gap: 4px; }
+.flap b { display: grid; place-items: center; width: 1.9em; height: 2.3em; background: #121214; border: 1px solid #222226; border-radius: 4px; font-weight: 700; font-size: clamp(15px, 1.4vw, 18px); position: relative; overflow: hidden; }
+.flap b::after { content: ""; position: absolute; left: 0; right: 0; top: 50%; height: 1px; background: #000; }
+.flap b.flip { animation: flip .28s ease-in-out; }
+@keyframes flip { 0% { transform: rotateX(0); } 50% { transform: rotateX(90deg); filter: brightness(.5); } 100% { transform: rotateX(0); } }
+.roles { display: flex; align-items: center; gap: 14px; flex-wrap: wrap; color: var(--muted); font-size: 14px; }
+.cta { display: flex; gap: 12px; margin-top: 34px; flex-wrap: wrap; }
+.btn { display: inline-flex; align-items: center; gap: 8px; padding: 12px 26px; border-radius: 999px; border: 1px solid rgba(255,255,255,.25); font-size: 15px; transition: background .2s, border-color .2s, transform .2s; }
+.btn:hover { transform: translateY(-2px); border-color: #fff; }
+.btn.primary { background: var(--amber); border-color: var(--amber); color: #1a0d03; font-weight: 700; }
+.btn.primary:hover { background: var(--amber-soft); }
+.hud { position: absolute; z-index: 2; left: var(--gutter); right: var(--gutter); bottom: 26px; display: flex; justify-content: space-between; align-items: end; font-size: 11px; color: var(--muted); }
+.hud b { color: var(--ink); font-weight: 400; }
+.replay { font-family: var(--mono); font-size: 11px; letter-spacing: .14em; color: var(--muted); border: 1px solid var(--line); border-radius: 999px; padding: 6px 14px; opacity: 0; pointer-events: none; transition: opacity .4s; }
+.replay.show { opacity: 1; pointer-events: auto; }
+.replay:hover { color: var(--ink); border-color: #555; }
+@media (max-width: 760px) {
+  .hero video, .hero .poster { object-position: 66% 50%; }
+  .hero::after { background: linear-gradient(0deg, rgba(5,5,6,.96) 12%, rgba(5,5,6,.55) 45%, rgba(0,0,0,0) 70%); }
+  .hero-copy { top: auto; bottom: 76px; right: var(--gutter); }
+}
 
-      <section class="experience section-pad" id="experience">
-        <div class="section-label">
-          <span>03</span>
-          <span>EXPERIENCE / 工作经历</span>
-        </div>
-        <ul class="experience-list">
-          <li class="experience-item reveal">
-            <span class="experience-city">咸宁</span>
-            <strong class="experience-club">Muse Club</strong>
-            <span class="experience-tag">WORK EXPERIENCE</span>
-          </li>
-          <li class="experience-item reveal">
-            <span class="experience-city">普洱</span>
-            <strong class="experience-club">Motion Club</strong>
-            <span class="experience-tag">WORK EXPERIENCE</span>
-          </li>
-          <li class="experience-item reveal">
-            <span class="experience-city">武汉</span>
-            <strong class="experience-club">Supermiami</strong>
-            <span class="experience-tag">WORK EXPERIENCE</span>
-          </li>
-          <li class="experience-item reveal">
-            <span class="experience-city">宁波</span>
-            <strong class="experience-club">DownTown</strong>
-            <span class="experience-tag">WORK EXPERIENCE</span>
-          </li>
-        </ul>
-      </section>
+/* ===== 2/3 视频章节：进入这一页时画框从小放大到全屏，再开始播放 ===== */
+.scene .frame { position: absolute; inset: 0; clip-path: inset(16% 24% round 28px); transition: clip-path 1.1s var(--ease); background: #000; }
+.scene.open .frame { clip-path: inset(0 0 round 0); }
+.scene video, .scene .frame img { position: absolute; inset: 0; width: 100%; height: 100%; object-fit: cover; }
+.scene .shade { position: absolute; inset: 0; opacity: 0; transition: opacity 1s .3s; }
+.scene.open .shade { opacity: 1; }
 
-      <section class="showreel section-pad" id="showreel">
-        <div class="section-label">
-          <span>04</span>
-          <span>SHOWREEL / 作品影像</span>
-        </div>
-        <div class="video-gallery">
-          <article class="video-piece reveal">
-            <div class="video-piece-head">
-              <span>01 / SHOWREEL</span>
-              <span>LIGHTING DESIGN</span>
-            </div>
-            <div class="video-wrap">
-              <video
-                id="portfolio-video"
-                controls
-                playsinline
-                webkit-playsinline
-                preload="metadata"
-                poster="../public/media/video-cover-01.jpg"
-                src="../public/media/showreel.mp4?v=20261008"
-                data-hls="../public/media/hls-showreel/master.m3u8"
-                data-hls-low="../public/media/hls-showreel/0/index.m3u8"
-              >
-                你的浏览器暂不支持视频播放。
-              </video>
-              <button class="video-start" type="button" aria-label="播放作品影像一">播放视频 ▶</button>
-              <div class="video-corner" aria-hidden="true">LIGHTING / LIVE 01</div>
-            </div>
-            <div class="video-actions">
-              <p class="video-status" role="status" aria-live="polite" hidden></p>
-              <button class="video-retry" type="button" aria-label="重试播放作品影像一" hidden>重试播放</button>
-            </div>
-          </article>
+#about .shade { background: linear-gradient(90deg, rgba(0,0,0,.88) 0%, rgba(0,0,0,.55) 38%, rgba(0,0,0,0) 62%); }
+.about-copy { position: absolute; z-index: 2; left: var(--gutter); top: 64px; bottom: 24px; display: flex; flex-direction: column; justify-content: center; width: min(520px, calc(100% - 2*var(--gutter))); }
+.about-copy h2 { font-size: clamp(28px, 3.2vw, 46px); line-height: 1.25; margin: 10px 0 14px; font-weight: 800; }
+.about-copy > p { color: #cfc8bf; }
+.abilities { list-style: none; margin-top: 22px; display: grid; gap: 2px; }
+.abilities li { display: grid; grid-template-columns: 54px 1fr; gap: 2px 12px; padding: 10px 0; border-top: 1px solid var(--line); opacity: .18; transition: opacity .5s; }
+.abilities li.on { opacity: 1; }
+.abilities .q { font-family: var(--mono); font-size: 12px; color: var(--muted); padding-top: 4px; }
+.abilities li.on .q { color: var(--amber); }
+.abilities h3 { font-size: 18px; }
+.abilities p { grid-column: 2; font-size: 14px; color: var(--muted); }
+@media (max-width: 760px) {
+  #about .shade { background: linear-gradient(0deg, rgba(0,0,0,.92) 35%, rgba(0,0,0,.4) 70%, rgba(0,0,0,0)); }
+  .about-copy { top: auto; bottom: 28px; justify-content: flex-end; }
+  .about-copy h2 { font-size: 26px; margin: 8px 0 10px; }
+  .about-copy > p { font-size: 14px; }
+  .abilities { margin-top: 14px; }
+  .abilities li { padding: 8px 0; }
+  .abilities p { display: none; }
+  #about video, #about .frame img { object-position: 68% 50%; }
+}
 
-          <article class="video-piece reveal">
-            <div class="video-piece-head">
-              <span>03 / LIVE SESSION</span>
-              <span>EXTENDED SET</span>
-            </div>
-            <div class="video-wrap">
-              <video
-                id="portfolio-video-03"
-                controls
-                playsinline
-                webkit-playsinline
-                preload="metadata"
-                poster="../public/media/video-cover-03.jpg"
-                src="../public/media/live-performance-02.mp4?v=20261008"
-                data-hls="../public/media/hls-live-session/master.m3u8"
-                data-hls-low="../public/media/hls-live-session/0/index.m3u8"
-              >
-                你的浏览器暂不支持视频播放。
-              </video>
-              <button class="video-start" type="button" aria-label="播放作品影像三">播放视频 ▶</button>
-              <div class="video-corner" aria-hidden="true">LIGHTING / LIVE 03</div>
-            </div>
-            <div class="video-actions">
-              <p class="video-status" role="status" aria-live="polite" hidden></p>
-              <button class="video-retry" type="button" aria-label="重试播放作品影像三" hidden>重试播放</button>
-            </div>
-          </article>
-        </div>
-        <div class="video-notes">
-          <span>灯束结构</span>
-          <span>色彩氛围</span>
-          <span>节奏控制</span>
-          <span>现场执行</span>
-        </div>
-      </section>
+#works-open .shade { background: linear-gradient(0deg, rgba(0,0,0,.85) 0%, rgba(0,0,0,.2) 40%, rgba(0,0,0,0) 60%), linear-gradient(90deg, rgba(0,0,0,.6), rgba(0,0,0,0) 45%); }
+.works-title { position: absolute; z-index: 2; left: var(--gutter); bottom: 12vh; }
+.works-title h2 { font-size: clamp(56px, 10vw, 160px); line-height: 1; font-weight: 900; letter-spacing: -.02em; margin-top: 10px; }
+.works-title h2 em { font-style: normal; color: var(--amber); }
+@media (max-width: 760px) { #works-open video, #works-open .frame img { object-position: 56% 50%; } }
 
-      <section class="works section-pad" id="works">
-        <div class="section-label">
-          <span>05</span>
-          <span>SELECTED SCENES / 现场片段</span>
-        </div>
+/* ===== 4/5 作品页：内容限定在一屏内 ===== */
+.works-page { background: var(--bg); display: flex; flex-direction: column; padding: 84px var(--gutter) 40px; }
+.works-head { display: flex; justify-content: space-between; align-items: end; gap: 12px 20px; flex-wrap: wrap; margin-bottom: 22px; }
+.works-head h3 { font-size: clamp(22px, 2.4vw, 32px); }
+.works-head p { color: var(--muted); font-size: 14px; }
+.grid-videos { flex: 1; min-height: 0; display: grid; grid-template-columns: 1fr 1fr; gap: 18px; align-content: center; }
+.grid-photos { flex: 1; min-height: 0; display: grid; grid-template-columns: 1fr 1fr; grid-template-rows: 1fr 1fr; gap: 14px; }
+.card { position: relative; display: block; width: 100%; text-align: left; border-radius: 16px; overflow: hidden; background: #0d0d10; border: 1px solid var(--line); isolation: isolate; }
+.grid-videos .card { aspect-ratio: 16/9; max-height: 100%; }
+.grid-photos .card { height: 100%; }
+.card video, .card img { position: absolute; inset: 0; width: 100%; height: 100%; object-fit: cover; transition: transform .8s var(--ease), filter .5s; filter: brightness(.82); }
+.card:hover video, .card:hover img { transform: scale(1.04); filter: brightness(1); }
+/* 追光：一团跟随鼠标的暖光 */
+.card::after { content: ""; position: absolute; inset: 0; z-index: 2; pointer-events: none; opacity: 0; transition: opacity .3s;
+  background: radial-gradient(360px circle at var(--x, 50%) var(--y, 50%), rgba(255,170,90,.22), transparent 60%); mix-blend-mode: screen; }
+.card:hover::after { opacity: 1; }
+.card .meta { position: absolute; z-index: 3; left: 0; right: 0; bottom: 0; padding: 16px 18px; display: flex; justify-content: space-between; align-items: end; gap: 10px; background: linear-gradient(0deg, rgba(0,0,0,.8), rgba(0,0,0,0)); }
+.card .meta strong { font-size: 17px; display: block; }
+.card .meta .mono { font-size: 11px; color: var(--amber-soft); }
+.play { flex: none; width: 44px; height: 44px; border-radius: 50%; background: rgba(255,154,60,.9); color: #1a0d03; display: grid; place-items: center; font-size: 14px; transition: transform .25s; }
+.card:hover .play { transform: scale(1.1); }
+.tag { position: absolute; z-index: 3; top: 12px; left: 12px; font-family: var(--mono); font-size: 10px; letter-spacing: .14em; padding: 4px 10px; border-radius: 999px; background: rgba(0,0,0,.55); border: 1px solid rgba(255,255,255,.18); }
+@media (max-width: 760px) {
+  .works-page { padding: 72px var(--gutter) 28px; }
+  .grid-videos { grid-template-columns: 1fr; align-content: center; gap: 14px; }
+  .grid-photos { gap: 10px; }
+  .card .meta { padding: 12px 14px; }
+  .card .meta strong { font-size: 15px; }
+}
 
-        <div class="works-photo-grid">
-          <div class="works-photo reveal">
-            <img
-              src="../public/media/scene-motion-01.jpg"
-              alt=""
-              width="1536"
-              height="1024"
-              loading="eager"
-              decoding="async"
-            />
-          </div>
-          <div class="works-photo reveal">
-            <img
-              src="../public/media/scene-motion-02.jpg"
-              alt=""
-              width="1536"
-              height="1024"
-              loading="eager"
-              decoding="async"
-            />
-          </div>
-          <div class="works-photo reveal">
-            <img
-              src="../public/media/scene-motion-03.jpg"
-              alt=""
-              width="1536"
-              height="1024"
-              loading="eager"
-              decoding="async"
-            />
-          </div>
-          <div class="works-photo reveal">
-            <img
-              src="../public/media/scene-motion-04.jpg"
-              alt=""
-              width="1536"
-              height="1024"
-              loading="eager"
-              decoding="async"
-            />
-          </div>
-        </div>
-      </section>
+/* 弹窗播放器 */
+dialog.viewer { margin: auto; width: min(1200px, calc(100% - 24px)); max-height: calc(100svh - 24px); background: #000; color: var(--ink); border: 1px solid var(--line); border-radius: 14px; padding: 0; overflow: hidden; }
+dialog.viewer::backdrop { background: rgba(0,0,0,.86); backdrop-filter: blur(4px); }
+dialog.viewer[open] { animation: pop .35s var(--ease); }
+@keyframes pop { from { opacity: 0; transform: scale(.97); } }
+.viewer-body video, .viewer-body img { width: 100%; max-height: calc(100svh - 90px); object-fit: contain; background: #000; }
+.viewer-bar { display: flex; justify-content: space-between; align-items: center; gap: 12px; padding: 12px 16px; font-size: 14px; border-top: 1px solid var(--line); }
+.viewer-bar .mono { font-size: 11px; color: var(--muted); }
+.x { width: 36px; height: 36px; border-radius: 50%; border: 1px solid var(--line); font-size: 16px; }
+.x:hover { border-color: #666; }
 
-      <section class="manifesto section-pad">
-        <div class="manifesto-lines" aria-hidden="true">
-          <span>BEAM</span><span>COLOR</span><span>RHYTHM</span>
-        </div>
-        <div class="manifesto-copy reveal">
-          <span class="manifesto-index">05 / APPROACH</span>
-          <h2>光不是装饰，<br />它是现场的叙事。</h2>
-          <p>
-            从空间结构、音乐节奏到观众情绪，建立清晰、有效、可执行的灯光语言。
-          </p>
-        </div>
-      </section>
-    </main>
+/* ===== 6 宣言 ===== */
+.manifesto video { position: absolute; inset: 0; width: 100%; height: 100%; object-fit: cover; }
+.manifesto::after { content: ""; position: absolute; inset: 0; background: radial-gradient(ellipse 30% 60% at 50% 45%, rgba(0,0,0,0), rgba(0,0,0,.55)); pointer-events: none; }
+.say { position: absolute; z-index: 2; top: 50%; transform: translateY(-50%); font-size: clamp(26px, 3.6vw, 56px); font-weight: 900; line-height: 1.3; }
+.say.left { left: var(--gutter); }
+.say.right { right: var(--gutter); text-align: right; }
+.say span { color: #3a342e; transition: color .3s, text-shadow .3s; }
+.say span.on { color: var(--ink); text-shadow: 0 0 30px rgba(255,170,90,.35); }
+.say.right span.on { color: var(--amber); }
+@media (max-width: 760px) {
+  .say { transform: none; font-size: 26px; }
+  .say.left { top: 14vh; }
+  .say.right { top: auto; bottom: 12vh; }
+}
 
-    <footer>
-      <div>
-        <span class="footer-kicker">AVAILABLE FOR COLLABORATION</span>
-        <strong>灯光小1 · 徐依帆</strong>
+/* ===== 7 联系 ===== */
+.contact { display: flex; align-items: center; }
+.contact video, .contact .poster { position: absolute; inset: 0; width: 100%; height: 100%; object-fit: cover; object-position: 30% 50%; }
+.contact::after { content: ""; position: absolute; inset: 0; background: linear-gradient(270deg, rgba(0,0,0,.6) 0%, rgba(0,0,0,.2) 45%, rgba(0,0,0,0) 60%); pointer-events: none; }
+.contact-panel { position: relative; z-index: 2; margin-left: auto; margin-right: var(--gutter); width: min(480px, calc(100% - 2*var(--gutter))); opacity: .12; filter: saturate(0); transition: opacity 1.2s var(--ease), filter 1.2s; }
+.contact-panel.lit { opacity: 1; filter: none; }
+.contact-panel h2 { font-size: clamp(36px, 4.8vw, 72px); line-height: 1.15; font-weight: 900; margin: 14px 0 26px; }
+.wx { display: flex; align-items: center; justify-content: space-between; gap: 16px; padding: 18px 20px; border-radius: 14px; background: rgba(12,12,14,.7); border: 1px solid rgba(255,154,60,.35); backdrop-filter: blur(8px); transition: box-shadow 1.2s; }
+.contact-panel.lit .wx { box-shadow: 0 0 60px rgba(255,154,60,.18); }
+.wx small { display: block; font-size: 12px; color: var(--muted); }
+.wx strong { font-family: var(--mono); font-size: clamp(22px, 2.4vw, 30px); letter-spacing: .06em; }
+.copy { padding: 10px 18px; border-radius: 999px; background: var(--amber); color: #1a0d03; font-weight: 700; font-size: 14px; white-space: nowrap; }
+.copy:hover { background: var(--amber-soft); }
+.contact-note { margin-top: 14px; font-size: 13px; color: var(--muted); }
+.contact footer { position: absolute; z-index: 2; left: 0; right: 0; bottom: 0; padding: 16px var(--gutter); display: flex; justify-content: space-between; gap: 12px; flex-wrap: wrap; font-size: 12px; color: var(--muted); background: linear-gradient(0deg, rgba(0,0,0,.7), rgba(0,0,0,0)); }
+@media (max-width: 760px) {
+  .contact { align-items: flex-end; padding-bottom: 76px; }
+  .contact::after { background: linear-gradient(0deg, rgba(0,0,0,.9) 30%, rgba(0,0,0,0) 65%); }
+  .contact-panel { margin: 0 var(--gutter); }
+  .contact video, .contact .poster { object-position: 16% 50%; }
+  .contact footer .mono { display: none; }
+}
+
+/* 减少动态效果：不自动播放，直接显示定格画面和全部文字 */
+@media (prefers-reduced-motion: reduce) {
+  html { scroll-behavior: auto; }
+  .go::before, .go::after { animation: none; }
+  .cue-in, .abilities li { opacity: 1; transform: none; transition: none; }
+  .scene .frame { clip-path: none; transition: none; }
+  .scene .shade { opacity: 1; transition: none; }
+  .say span { color: var(--ink); }
+  .contact-panel { opacity: 1; filter: none; }
+}
+</style>
+</head>
+<body class="locked">
+
+<div id="gate" role="dialog" aria-label="进入网站">
+  <p class="gate-top mono">LIGHTING DESIGNER · 灯光小1 · 徐依帆</p>
+  <div>
+    <button class="go" id="go" aria-label="按下 GO 开灯进入">GO</button>
+    <p class="gate-hint">按下开灯<small>PRESS GO</small></p>
+  </div>
+</div>
+<div id="flash" aria-hidden="true"></div>
+
+<nav class="nav" id="nav">
+  <a href="#top" class="logo"><i></i>灯光小1</a>
+  <ul>
+    <li><a href="#about">关于</a></li>
+    <li><a href="#works-open">作品</a></li>
+    <li><a href="#contact">联系</a></li>
+  </ul>
+</nav>
+<div class="dots" id="dots" aria-label="页码"></div>
+
+<main>
+  <!-- 1 首屏：文字跟着视频时间点出现，8 秒灯亮时标题点亮 -->
+  <section class="page hero" id="top" data-name="首屏">
+    <img class="poster" src="media/hero-poster.jpg" alt="" aria-hidden="true">
+    <video id="heroVideo" data-src="hero.mp4" muted playsinline preload="auto" aria-hidden="true"></video>
+    <div class="hero-copy">
+      <p class="hero-real cue-in" data-t="3">徐依帆</p>
+      <h1 class="hero-title" id="heroTitle">灯光小<span>1</span></h1>
+      <div class="roles cue-in" data-t="8.4">
+        <span class="flap" id="flap" aria-live="polite"><b>灯</b><b>光</b><b>设</b><b>计</b></span>
+        <span>什么场都能接</span>
       </div>
-      <a href="#top">BACK TO TOP ↑</a>
-    </footer>
+      <div class="cta cue-in" data-t="9.6">
+        <a href="#videos" class="btn primary">看现场作品</a>
+        <a href="#contact" class="btn">联系我</a>
+      </div>
+    </div>
+    <div class="hud mono">
+      <span>TC <b id="tc">00:00:00</b> · <b id="cueName">CUE 01 入场</b></span>
+      <button class="replay" id="replay">↺ 重播</button>
+    </div>
+  </section>
 
-    <script src="../src/site.js?v=20261008-inline2"></script>
-  </body>
+  <!-- 2 关于我：推子推满、舞台光亮起时三项能力依次亮起 -->
+  <section class="page scene" id="about" data-name="关于" data-cues="4.2,5.0,5.8">
+    <div class="frame">
+      <img src="media/console-poster.jpg" alt="" aria-hidden="true">
+      <video data-src="console.mp4" muted playsinline preload="metadata" aria-hidden="true"></video>
+      <div class="shade"></div>
+    </div>
+    <div class="about-copy cue-in" data-reveal>
+      <p class="label">01 / ABOUT</p>
+      <h2>徐依帆，<br>圈里叫我灯光小1。</h2>
+      <p>灯光设计、控台编程、现场控场，一个人从头盯到尾。俱乐部、Livehouse、音乐节、商演，什么场都能接。</p>
+      <ul class="abilities">
+        <li><span class="q">CUE 1</span><h3>灯光设计</h3><p>从空间和音乐出发，定下每一段的颜色、角度和节奏。</p></li>
+        <li><span class="q">CUE 2</span><h3>控台编程</h3><p>把设计写进控台，Cue 跟着歌走，换场不乱。</p></li>
+        <li><span class="q">CUE 3</span><h3>现场控场</h3><p>演出当晚盯住全场，跟着 DJ 和人群实时推光。</p></li>
+      </ul>
+    </div>
+  </section>
+
+  <!-- 3 作品开场：站起比 V 时标题出现 -->
+  <section class="page scene" id="works-open" data-name="作品" data-cues="5.6">
+    <div class="frame">
+      <img src="media/truss-poster.jpg" alt="" aria-hidden="true">
+      <video data-src="truss.mp4" muted playsinline preload="metadata" aria-hidden="true"></video>
+      <div class="shade"></div>
+    </div>
+    <div class="works-title cue-in" data-reveal>
+      <p class="label">02 / WORKS</p>
+      <h2>现场<em>作品</em></h2>
+    </div>
+  </section>
+
+  <!-- 4 完整录像 -->
+  <section class="page works-page" id="videos" data-name="录像">
+    <div class="works-head">
+      <h3>完整现场录像</h3>
+      <p>点开播放完整视频，可开声音、拖动进度</p>
+    </div>
+    <div class="grid-videos">
+      <button class="card" data-video="full-3.mp4" data-title="现场 01 · 完整录像" data-dur="16:38">
+        <video data-src="work-3.mp4" poster="media/work-3-poster.jpg" muted loop playsinline preload="none" aria-hidden="true"></video>
+        <span class="tag">FULL · 16:38</span>
+        <div class="meta"><div><span class="mono">LIVE 01</span><strong>现场 01 · 完整录像</strong></div><span class="play" aria-hidden="true">▶</span></div>
+      </button>
+      <button class="card" data-video="full-1.mp4" data-title="现场 02 · 完整录像" data-dur="2:42">
+        <video data-src="work-1.mp4" poster="media/work-1-poster.jpg" muted loop playsinline preload="none" aria-hidden="true"></video>
+        <span class="tag">FULL · 2:42</span>
+        <div class="meta"><div><span class="mono">LIVE 02</span><strong>现场 02 · 完整录像</strong></div><span class="play" aria-hidden="true">▶</span></div>
+      </button>
+    </div>
+  </section>
+
+  <!-- 5 现场照片 -->
+  <section class="page works-page" id="photos" data-name="照片">
+    <div class="works-head"><h3>现场照片</h3><p>点开查看大图</p></div>
+    <div class="grid-photos">
+      <button class="card" data-img="media/photo-4.jpg" data-title="现场照片 01"><img src="media/photo-4.jpg" alt="现场照片：琥珀色光束从穹顶两侧对称射向中央" loading="lazy"></button>
+      <button class="card" data-img="media/photo-1.jpg" data-title="现场照片 02"><img src="media/photo-1.jpg" alt="现场照片：冷白光束围绕环形灯架旋转" loading="lazy"></button>
+      <button class="card" data-img="media/photo-2.jpg" data-title="现场照片 03"><img src="media/photo-2.jpg" alt="现场照片：金色光束放射状铺满场内" loading="lazy"></button>
+      <button class="card" data-img="media/photo-3.jpg" data-title="现场照片 04"><img src="media/photo-3.jpg" alt="现场照片：青白色光束交叉成网" loading="lazy"></button>
+    </div>
+  </section>
+
+  <!-- 6 宣言：逆光循环，文字逐字亮起 -->
+  <section class="page manifesto" id="manifesto" data-name="宣言">
+    <video data-src="backlight.mp4" poster="media/backlight-poster.jpg" muted loop playsinline preload="metadata" aria-hidden="true"></video>
+    <p class="say left" data-say>光不是装饰，</p>
+    <p class="say right" data-say>是现场的<br>第二条节奏线。</p>
+  </section>
+
+  <!-- 7 联系：地上的灯亮起时，联系卡片被照亮 -->
+  <section class="page contact" id="contact" data-name="联系">
+    <img class="poster" src="media/backstage-poster.jpg" alt="" aria-hidden="true">
+    <video data-src="backstage.mp4" muted playsinline preload="metadata" aria-hidden="true"></video>
+    <div class="contact-panel" id="contactPanel">
+      <p class="label">03 / CONTACT</p>
+      <h2>下一场，<br>一起把灯打亮。</h2>
+      <div class="wx">
+        <div><small>微信</small><strong id="wxId">B1itE06</strong></div>
+        <button class="copy" id="copyWx">复制微信号</button>
+      </div>
+      <p class="contact-note">添加时请备注：演出时间 + 场地</p>
+    </div>
+    <footer>
+      <span>© 2026 灯光小1 · 徐依帆</span>
+      <span class="mono">LIGHTING DESIGN · PROGRAMMING · SHOW CONTROL</span>
+    </footer>
+  </section>
+</main>
+
+<dialog class="viewer" id="viewer" aria-labelledby="viewerTitle">
+  <div class="viewer-body" id="viewerBody"></div>
+  <div class="viewer-bar">
+    <div><strong id="viewerTitle"></strong> <span class="mono" id="viewerMeta"></span></div>
+    <button class="x" id="viewerClose" aria-label="关闭">✕</button>
+  </div>
+</dialog>
+
+<script>
+// ===== 视频地址：腾讯云 COS 存储桶里的「上传到COS的视频」文件夹（以 / 结尾）。改回 'media/' 即使用本地视频 =====
+const VIDEO_BASE = 'https://xiao1-1462453222.cos.ap-hongkong.myqcloud.com/%E4%B8%8A%E4%BC%A0%E5%88%B0COS%E7%9A%84%E8%A7%86%E9%A2%91/';
+
+const $ = (s, el = document) => el.querySelector(s);
+const $$ = (s, el = document) => [...el.querySelectorAll(s)];
+const reduce = matchMedia('(prefers-reduced-motion: reduce)').matches;
+const fine = matchMedia('(pointer: fine)').matches;
+
+// 每次进入都从首屏开始，避免刷新后停在中间
+if ('scrollRestoration' in history) history.scrollRestoration = 'manual';
+scrollTo(0, 0);
+addEventListener('load', () => { if (document.body.classList.contains('locked')) scrollTo(0, 0); });
+
+$$('video[data-src]').forEach(v => { v.src = VIDEO_BASE + v.dataset.src; });
+
+// 每帧检查视频时间（支持时用 requestVideoFrameCallback，更准）
+function watchTime(video, fn) {
+  if ('requestVideoFrameCallback' in HTMLVideoElement.prototype) {
+    const tick = () => { fn(video.currentTime); video.requestVideoFrameCallback(tick); };
+    video.requestVideoFrameCallback(tick);
+  }
+  video.addEventListener('timeupdate', () => fn(video.currentTime));
+}
+const hidePosterOnPlay = (video, img) => video.addEventListener('playing', () => { img.style.opacity = 0; });
+
+// ===== 页码圆点 =====
+const pages = $$('.page');
+$('#dots').innerHTML = pages.map(p => `<a href="#${p.id}" aria-label="${p.dataset.name}"></a>`).join('');
+const dots = $$('#dots a');
+
+// ===== 翻牌身份标签 =====
+const flap = $('#flap'), WORDS = ['灯光设计', '控台编程', '现场控场'];
+let flapIdx = 0, flapTimer = null;
+function flipTo(word) {
+  [...flap.children].forEach((b, i) => setTimeout(() => {
+    b.classList.remove('flip'); void b.offsetWidth; b.classList.add('flip');
+    setTimeout(() => { b.textContent = word[i]; }, 140);
+  }, i * 70));
+}
+function startFlap() {
+  if (flapTimer || reduce) return;
+  flapTimer = setInterval(() => { flapIdx = (flapIdx + 1) % WORDS.length; flipTo(WORDS[flapIdx]); }, 2200);
+}
+
+// ===== 首屏 =====
+const hero = $('#heroVideo'), heroTitle = $('#heroTitle'), heroCues = $$('.hero [data-t]');
+const CUE_NAMES = [[0, 'CUE 01 入场'], [3, 'CUE 02 侧耳'], [6, 'CUE 03 升机位'], [8, 'CUE 04 开灯'], [11.5, 'CUE 05 定格']];
+const fmt = t => { const s = Math.floor(t), f = Math.floor((t - s) * 30); return `00:${String(s).padStart(2, '0')}:${String(f).padStart(2, '0')}`; };
+function heroAt(t) {
+  heroCues.forEach(el => el.classList.toggle('on', t >= +el.dataset.t));
+  const lit = t >= 8;
+  if (lit) startFlap();
+  heroTitle.classList.toggle('lit', lit);
+  $('#tc').textContent = fmt(t);
+  $('#cueName').textContent = CUE_NAMES.filter(c => t >= c[0]).pop()[1];
+}
+watchTime(hero, heroAt);
+hidePosterOnPlay(hero, $('.hero .poster'));
+hero.addEventListener('ended', () => $('#replay').classList.add('show'));
+$('#replay').addEventListener('click', () => { $('#replay').classList.remove('show'); hero.currentTime = 0; hero.play(); });
+
+// ===== 进入页：按下 GO =====
+function enter() {
+  scrollTo(0, 0);
+  document.body.classList.remove('locked');
+  $('#nav').classList.add('show'); $('#dots').classList.add('show');
+  $('#gate').classList.add('gone');
+  if (reduce) { $('.hero .poster').src = 'media/hero-end.jpg'; heroAt(12); return; }
+  $('#flash').classList.add('on');
+  setTimeout(() => hero.play().catch(() => heroAt(12)), 250);
+}
+$('#go').addEventListener('click', enter);
+$('#go').focus();
+
+// ===== 视频章节：进入时放大并播放，离开后重置，回来可以再看一遍 =====
+const scenes = $$('.scene').map(sec => ({
+  sec, video: $('video', sec), reveal: $('[data-reveal]', sec),
+  cues: sec.dataset.cues.split(',').map(Number), timer: null,
+}));
+function sceneAt(sc, t) {
+  if (sc.sec.id === 'about') $$('.abilities li', sc.sec).forEach((li, i) => li.classList.toggle('on', t >= sc.cues[i]));
+  else sc.reveal.classList.toggle('on', t >= sc.cues[0]);
+}
+scenes.forEach(sc => { watchTime(sc.video, t => sceneAt(sc, t)); hidePosterOnPlay(sc.video, $('.frame img', sc.sec)); });
+function openScene(sc) {
+  sc.sec.classList.add('open');
+  if (sc.sec.id === 'about') sc.reveal.classList.add('on');
+  sc.timer = setTimeout(() => { sc.video.currentTime = 0; sc.video.play().catch(() => sceneAt(sc, 99)); }, 900);
+}
+function closeScene(sc) {
+  clearTimeout(sc.timer); sc.sec.classList.remove('open');
+  sc.video.pause(); sc.video.currentTime = 0;
+  if (sc.sec.id === 'about') sc.reveal.classList.remove('on');
+  sceneAt(sc, 0);
+}
+
+// ===== 宣言：进入后逐字亮起 =====
+const manifesto = $('#manifesto'), backlight = $('video', manifesto);
+const sayChars = $$('[data-say]').flatMap(p => {
+  p.innerHTML = p.innerHTML.split('<br>').map(line => [...line].map(c => `<span>${c}</span>`).join('')).join('<br>');
+  return $$('span', p);
+});
+let sayTimers = [];
+function openManifesto() { backlight.play().catch(() => {}); sayChars.forEach((s, i) => sayTimers.push(setTimeout(() => s.classList.add('on'), 400 + i * 110))); }
+function closeManifesto() { backlight.pause(); sayTimers.forEach(clearTimeout); sayTimers = []; sayChars.forEach(s => s.classList.remove('on')); }
+
+// ===== 联系 =====
+const contact = $('#contact'), backstage = $('video', contact), panel = $('#contactPanel');
+watchTime(backstage, t => panel.classList.toggle('lit', t >= 3.2));
+hidePosterOnPlay(backstage, $('.poster', contact));
+
+// ===== 当前是哪一页：控制播放、导航高亮 =====
+const active = new Set();
+function activate(sec) {
+  if (active.has(sec)) return; active.add(sec);
+  const i = pages.indexOf(sec); dots.forEach((d, j) => d.classList.toggle('cur', i === j));
+  $$('.nav ul a').forEach(a => a.classList.toggle('cur', a.getAttribute('href') === '#' + sec.id));
+  if (reduce) return;
+  const sc = scenes.find(s => s.sec === sec); if (sc) openScene(sc);
+  if (sec === manifesto) openManifesto();
+  if (sec === contact) { backstage.currentTime = 0; backstage.play().catch(() => panel.classList.add('lit')); }
+  $$('.card video', sec).forEach(v => v.play().catch(() => {}));
+}
+function deactivate(sec) {
+  if (!active.has(sec)) return; active.delete(sec);
+  const sc = scenes.find(s => s.sec === sec); if (sc) closeScene(sc);
+  if (sec === manifesto) closeManifesto();
+  if (sec === contact) { backstage.pause(); panel.classList.remove('lit'); }
+  $$('.card video', sec).forEach(v => v.pause());
+}
+const io = new IntersectionObserver(entries => entries.forEach(en => {
+  if (document.body.classList.contains('locked')) return;
+  if (en.intersectionRatio >= .6) activate(en.target);
+  else if (en.intersectionRatio < .15) deactivate(en.target);
+}), { threshold: [0, .15, .6, 1] });
+pages.forEach(p => { if (p.id !== 'top') io.observe(p); });
+if (reduce) {
+  $$('[data-reveal]').forEach(el => el.classList.add('on'));
+  $$('.abilities li').forEach(li => li.classList.add('on'));
+  sayChars.forEach(s => s.classList.add('on'));
+  panel.classList.add('lit');
+}
+// 首屏的圆点高亮
+new IntersectionObserver(([en]) => { if (en.intersectionRatio >= .6) { dots.forEach((d, j) => d.classList.toggle('cur', j === 0)); $$('.nav ul a').forEach(a => a.classList.remove('cur')); } }, { threshold: [.6] }).observe($('#top'));
+
+// ===== 作品卡片：追光 + 弹窗 =====
+if (fine) $$('.card').forEach(c => c.addEventListener('pointermove', e => {
+  const r = c.getBoundingClientRect();
+  c.style.setProperty('--x', `${e.clientX - r.left}px`); c.style.setProperty('--y', `${e.clientY - r.top}px`);
+}));
+const viewer = $('#viewer'), vBody = $('#viewerBody');
+$$('.card').forEach(c => c.addEventListener('click', () => {
+  if (c.dataset.video) vBody.innerHTML = `<video src="${VIDEO_BASE + c.dataset.video}" controls autoplay playsinline preload="metadata"></video>`;
+  else vBody.innerHTML = `<img src="${c.dataset.img}" alt="${$('img', c).alt}">`;
+  $('#viewerTitle').textContent = c.dataset.title;
+  $('#viewerMeta').textContent = c.dataset.dur ? `· 完整时长 ${c.dataset.dur}` : '';
+  viewer.showModal();
+}));
+$('#viewerClose').addEventListener('click', () => viewer.close());
+viewer.addEventListener('click', e => { if (e.target === viewer) viewer.close(); });
+viewer.addEventListener('close', () => { vBody.innerHTML = ''; });
+
+// ===== 复制微信号 =====
+$('#copyWx').addEventListener('click', async () => {
+  const id = $('#wxId').textContent, btn = $('#copyWx');
+  try { await navigator.clipboard.writeText(id); }
+  catch { const r = document.createRange(); r.selectNodeContents($('#wxId')); getSelection().removeAllRanges(); getSelection().addRange(r); document.execCommand('copy'); }
+  btn.textContent = '已复制 ✓';
+  setTimeout(() => { btn.textContent = '复制微信号'; }, 1800);
+});
+</script>
+</body>
 </html>
