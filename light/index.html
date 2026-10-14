@@ -31,7 +31,7 @@ video, img { display: block; }
 .label { font-family: var(--mono); font-size: 12px; letter-spacing: .18em; color: var(--amber); }
 :focus-visible { outline: 2px solid var(--amber); outline-offset: 3px; }
 
-.page { position: relative; height: 100svh; min-height: 520px; overflow: hidden; scroll-snap-align: start; scroll-snap-stop: always; background: #000; }
+.page { position: relative; height: 100vh; height: 100svh; min-height: 520px; overflow: hidden; scroll-snap-align: start; scroll-snap-stop: always; background: #000; }
 
 /* ===== 进入页 ===== */
 #gate { position: fixed; inset: 0; z-index: 100; background: #000; display: grid; place-items: center; text-align: center; transition: opacity .9s var(--ease), visibility .9s; }
@@ -142,10 +142,11 @@ video, img { display: block; }
 .works-head h3 { font-size: clamp(22px, 2.4vw, 32px); }
 .works-head p { color: var(--muted); font-size: 14px; }
 .grid-videos { flex: 1; min-height: 0; display: grid; grid-template-columns: 1fr 1fr; gap: 18px; align-content: center; }
-.grid-photos { flex: 1; min-height: 0; display: grid; grid-template-columns: 1fr 1fr; grid-template-rows: 1fr 1fr; gap: 14px; }
+.grid-photos { flex: 1; min-height: 0; display: grid; grid-template-columns: repeat(2, auto); justify-content: center; grid-template-rows: 1fr 1fr; gap: 14px; }
 .card { position: relative; display: block; width: 100%; text-align: left; border-radius: 16px; overflow: hidden; background: #0d0d10; border: 1px solid var(--line); isolation: isolate; }
 .grid-videos .card { aspect-ratio: 16/9; max-height: 100%; }
-.grid-photos .card { height: 100%; }
+/* 照片保持原图 3:2，不裁切 */
+.grid-photos .card { height: 100%; width: auto; max-width: 100%; aspect-ratio: 3 / 2; justify-self: center; }
 .card video, .card img { position: absolute; inset: 0; width: 100%; height: 100%; object-fit: cover; transition: transform .8s var(--ease), filter .5s; filter: brightness(.82); }
 .card:hover video, .card:hover img { transform: scale(1.04); filter: brightness(1); }
 /* 追光：一团跟随鼠标的暖光 */
@@ -215,6 +216,37 @@ dialog.viewer[open] { animation: pop .35s var(--ease); }
   .contact footer .mono { display: none; }
 }
 
+/* ===== 手机竖屏：视频保持完整 16:9 画面，背后用同一画面的模糊图铺满，文字放在视频下方 ===== */
+@media (max-width: 760px) and (orientation: portrait) {
+  .page[style*="--bd"]::before { content: ""; position: absolute; inset: -40px; background: var(--bd) center / cover no-repeat; filter: blur(26px) brightness(.32) saturate(1.2); pointer-events: none; }
+  .hero::after, .contact::after, .manifesto::after, #about .shade, #works-open .shade { display: none; }
+  .hero video, .hero .poster, .contact video, .contact .poster { inset: auto; top: 64px; left: 0; width: 100%; height: auto; aspect-ratio: 16 / 9; object-position: 50% 50%; }
+  .scene .frame { inset: auto; top: 64px; left: 0; right: 0; height: auto; aspect-ratio: 16 / 9; clip-path: inset(10% 12% round 14px); }
+  .scene.open .frame { clip-path: inset(0 round 0); }
+  .scene video, .scene .frame img, #about video, #about .frame img, #works-open video, #works-open .frame img { object-position: 50% 50%; }
+  .manifesto video { inset: auto; top: 50%; left: 0; width: 100%; height: auto; aspect-ratio: 16 / 9; transform: translateY(-50%); }
+  .hero-copy { top: calc(64px + 56.25vw + 28px); bottom: auto; justify-content: flex-start; }
+  #works-open .frame { top: calc(42% - 28.125vw); }
+  .hero-title { font-size: 58px; margin: 10px 0 16px; }
+  .cta { margin-top: 22px; }
+  .works-title { bottom: auto; top: calc(42% + 28.125vw + 32px); }
+  .works-title h2 { font-size: 64px; }
+  .contact { padding-bottom: 60px; }
+  .dots { display: none; }
+  .say.left { top: calc(50% - 28.125vw - 96px); }
+  .say.right { bottom: calc(50% - 28.125vw - 120px); }
+}
+/* 手机上照片按原比例 3:2，左右滑动一张一张看 */
+.swipe-hint { display: none; }
+@media (max-width: 760px) {
+  .swipe-hint { display: inline; }
+  .grid-photos { display: flex; align-items: center; gap: 12px; overflow-x: auto; scroll-snap-type: x mandatory; margin: 0 calc(-1 * var(--gutter)); padding: 0 var(--gutter); scrollbar-width: none; }
+  .grid-photos::-webkit-scrollbar { display: none; }
+  .grid-photos .card { flex: 0 0 100%; height: auto; aspect-ratio: 3 / 2; scroll-snap-align: center; }
+  .photo-count { display: block; text-align: center; margin-top: 14px; font-family: var(--mono); font-size: 12px; color: var(--muted); letter-spacing: .2em; }
+}
+.photo-count { display: none; }
+
 /* 减少动态效果：不自动播放，直接显示定格画面和全部文字 */
 @media (prefers-reduced-motion: reduce) {
   html { scroll-behavior: auto; }
@@ -250,7 +282,7 @@ dialog.viewer[open] { animation: pop .35s var(--ease); }
 
 <main>
   <!-- 1 首屏：文字跟着视频时间点出现，8 秒灯亮时标题点亮 -->
-  <section class="page hero" id="top" data-name="首屏">
+  <section class="page hero" id="top" data-name="首屏" style="--bd:url(media/hero-end.jpg)">
     <img class="poster" src="media/hero-poster.jpg" alt="" aria-hidden="true">
     <video id="heroVideo" data-src="hero.mp4" muted playsinline preload="auto" aria-hidden="true"></video>
     <div class="hero-copy">
@@ -272,7 +304,7 @@ dialog.viewer[open] { animation: pop .35s var(--ease); }
   </section>
 
   <!-- 2 关于我：推子推满、舞台光亮起时三项能力依次亮起 -->
-  <section class="page scene" id="about" data-name="关于" data-cues="4.2,5.0,5.8">
+  <section class="page scene" id="about" data-name="关于" data-cues="4.2,5.0,5.8" style="--bd:url(media/console-poster.jpg)">
     <div class="frame">
       <img src="media/console-poster.jpg" alt="" aria-hidden="true">
       <video data-src="console.mp4" muted playsinline preload="metadata" aria-hidden="true"></video>
@@ -291,7 +323,7 @@ dialog.viewer[open] { animation: pop .35s var(--ease); }
   </section>
 
   <!-- 3 作品开场：站起比 V 时标题出现 -->
-  <section class="page scene" id="works-open" data-name="作品" data-cues="5.6">
+  <section class="page scene" id="works-open" data-name="作品" data-cues="5.6" style="--bd:url(media/truss-poster.jpg)">
     <div class="frame">
       <img src="media/truss-poster.jpg" alt="" aria-hidden="true">
       <video data-src="truss.mp4" muted playsinline preload="metadata" aria-hidden="true"></video>
@@ -325,24 +357,25 @@ dialog.viewer[open] { animation: pop .35s var(--ease); }
 
   <!-- 5 现场照片 -->
   <section class="page works-page" id="photos" data-name="照片">
-    <div class="works-head"><h3>现场照片</h3><p>点开查看大图</p></div>
+    <div class="works-head"><h3>现场照片</h3><p><span class="swipe-hint">左右滑动 · </span>点开查看大图</p></div>
     <div class="grid-photos">
       <button class="card" data-img="media/photo-4.jpg" data-title="现场照片 01"><img src="media/photo-4.jpg" alt="现场照片：琥珀色光束从穹顶两侧对称射向中央" loading="lazy"></button>
       <button class="card" data-img="media/photo-1.jpg" data-title="现场照片 02"><img src="media/photo-1.jpg" alt="现场照片：冷白光束围绕环形灯架旋转" loading="lazy"></button>
       <button class="card" data-img="media/photo-2.jpg" data-title="现场照片 03"><img src="media/photo-2.jpg" alt="现场照片：金色光束放射状铺满场内" loading="lazy"></button>
       <button class="card" data-img="media/photo-3.jpg" data-title="现场照片 04"><img src="media/photo-3.jpg" alt="现场照片：青白色光束交叉成网" loading="lazy"></button>
     </div>
+    <p class="photo-count" id="photoCount">1 / 4</p>
   </section>
 
   <!-- 6 宣言：逆光循环，文字逐字亮起 -->
-  <section class="page manifesto" id="manifesto" data-name="宣言">
+  <section class="page manifesto" id="manifesto" data-name="宣言" style="--bd:url(media/backlight-poster.jpg)">
     <video data-src="backlight.mp4" poster="media/backlight-poster.jpg" muted loop playsinline preload="metadata" aria-hidden="true"></video>
     <p class="say left" data-say>光不是装饰，</p>
     <p class="say right" data-say>是现场的<br>第二条节奏线。</p>
   </section>
 
   <!-- 7 联系：地上的灯亮起时，联系卡片被照亮 -->
-  <section class="page contact" id="contact" data-name="联系">
+  <section class="page contact" id="contact" data-name="联系" style="--bd:url(media/backstage-poster.jpg)">
     <img class="poster" src="media/backstage-poster.jpg" alt="" aria-hidden="true">
     <video data-src="backstage.mp4" muted playsinline preload="metadata" aria-hidden="true"></video>
     <div class="contact-panel" id="contactPanel">
@@ -383,7 +416,13 @@ if ('scrollRestoration' in history) history.scrollRestoration = 'manual';
 scrollTo(0, 0);
 addEventListener('load', () => { if (document.body.classList.contains('locked')) scrollTo(0, 0); });
 
-$$('video[data-src]').forEach(v => { v.src = VIDEO_BASE + v.dataset.src; });
+// 微信 / 部分安卓内核需要这些属性才会在页面内播放，而不是弹出全屏播放器
+$$('video[data-src]').forEach(v => {
+  v.muted = true;
+  v.setAttribute('webkit-playsinline', ''); v.setAttribute('x5-playsinline', '');
+  v.setAttribute('disablepictureinpicture', ''); v.setAttribute('disableremoteplayback', '');
+  v.src = VIDEO_BASE + v.dataset.src;
+});
 
 // 每帧检查视频时间（支持时用 requestVideoFrameCallback，更准）
 function watchTime(video, fn) {
@@ -439,7 +478,13 @@ function enter() {
   $('#gate').classList.add('gone');
   if (reduce) { $('.hero .poster').src = 'media/hero-end.jpg'; heroAt(12); return; }
   $('#flash').classList.add('on');
-  setTimeout(() => hero.play().catch(() => heroAt(12)), 250);
+  // 在这次点击里直接开始播放：自动播放限制严格的浏览器只认用户点击时发起的播放
+  hero.play().catch(() => { $('.hero .poster').src = 'media/hero-end.jpg'; heroAt(12); });
+  // 手机上顺便“解锁”其余背景视频：播一下马上暂停，之后翻页时才能自动播放（电脑浏览器不需要，避免多耗流量）
+  if (!fine) $$('.scene video, .manifesto video, .contact video').forEach(v => {
+    const p = v.play();
+    if (p) p.then(() => { if (!active.has(v.closest('.page'))) { v.pause(); v.currentTime = 0; } }).catch(() => {});
+  });
 }
 $('#go').addEventListener('click', enter);
 $('#go').focus();
@@ -531,6 +576,13 @@ $$('.card').forEach(c => c.addEventListener('click', () => {
 $('#viewerClose').addEventListener('click', () => viewer.close());
 viewer.addEventListener('click', e => { if (e.target === viewer) viewer.close(); });
 viewer.addEventListener('close', () => { vBody.innerHTML = ''; });
+
+// 手机上照片左右滑动时更新页码
+const photoRail = $('.grid-photos');
+photoRail.addEventListener('scroll', () => {
+  const n = photoRail.children.length, i = Math.round(photoRail.scrollLeft / (photoRail.scrollWidth / n));
+  $('#photoCount').textContent = `${Math.min(n, i + 1)} / ${n}`;
+}, { passive: true });
 
 // ===== 复制微信号 =====
 $('#copyWx').addEventListener('click', async () => {
